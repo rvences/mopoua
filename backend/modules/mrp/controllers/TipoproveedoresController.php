@@ -73,7 +73,7 @@ class TipoproveedoresController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'model' => $modelproveedor,
+            'modelproveedor' => $modelproveedor,
         ]);
     }
 
