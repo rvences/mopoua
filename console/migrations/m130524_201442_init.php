@@ -24,6 +24,11 @@ class m130524_201442_init extends Migration
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ], $tableOptions);
+
+        $this->batchInsert('user', array('username', 'auth_key', 'password_hash', 'email', 'status'), array(
+            ['rvences', 'ePGWG40GOH85iAalZxpE17aFrBmyeVkK',
+                '$2y$13$L7h/19wYh/.IQs7TgqSP..WU3J3zsKBIcb.gf6hUSEYGTrVP/DUY.', 'rvences@gmail.com', 10],
+        ));
     }
 
     public function down()

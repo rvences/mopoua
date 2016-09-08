@@ -40,6 +40,17 @@ AppAsset::register($this);
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
+        $menuItems = [
+            [
+                'label' => 'MRP - Catálogos', 'items' =>array(
+                ['label' => 'Tipo de Proveedores', 'url'=> ['/mrp/tipoproveedores']],
+                ['label' => 'Tipo de Insumos', 'url'=> ['/mrp/tipoinsumos']],
+                ['label' => 'Proveedores', 'url'=> ['/mrp/proveedores']],
+                ['label' => 'Clave Presupuestal', 'url'=> ['/mrp/clavepresupuestal']],
+                ['label' => 'Unidad de Medida', 'url'=> ['/mrp/unidadmedida']],
+            )]
+        ];
+        /*
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
@@ -48,6 +59,7 @@ AppAsset::register($this);
             )
             . Html::endForm()
             . '</li>';
+        */
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
