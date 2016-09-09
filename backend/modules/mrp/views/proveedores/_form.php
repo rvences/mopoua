@@ -90,17 +90,17 @@ use kartik\widgets\ActiveForm;
             'class'=>'col-sm-2 control-label'
         ]); ?>
 
-        <div class="col-sm-10">
+        <div class="col-sm-8">
             <?= $form->field($model, 'notas',['showLabels'=>false])->textarea(['placeholder'=>'Otra información necesaria']); ?>
         </div>
 
-
+        <div class="col-sm-2">
+            <?= Html::submitButton($model->isNewRecord ? 'Nuevo' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </div>
 
 
     </div>
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Nuevo' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
+
 
 
 

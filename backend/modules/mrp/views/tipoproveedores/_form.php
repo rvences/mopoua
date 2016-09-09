@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use kartik\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model backend\modules\mrp\models\Tipoproveedores */
@@ -9,13 +9,24 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="tipoproveedores-form fondo">
+    <?php $form = ActiveForm::begin([
+            'type'=>ActiveForm::TYPE_HORIZONTAL,
+        ]
+    ); ?>
 
-    <?php $form = ActiveForm::begin(); ?>
+    <div class="form-group kv-fieldset-inline">
+        <?= Html::activeLabel($model, 'tipoproveedor', [
+            'label'=>'Registra Nuevo Proveedor',
+            'class'=>'col-sm-3 control-label'
+        ]); ?>
 
-    <?= $form->field($model, 'tipoproveedor')->textInput(['maxlength' => true]) ?>
+        <div class="col-sm-5">
+            <?= $form->field($model, 'tipoproveedor',['showLabels'=>false])->textInput(['placeholder'=>'Tipo de Proveedor']); ?>
+        </div>
 
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Nuevo' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <div class="col-sm-4">
+            <?= Html::submitButton($model->isNewRecord ? 'Nueva' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </div>
     </div>
 
     <?php ActiveForm::end(); ?>
