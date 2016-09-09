@@ -4,20 +4,16 @@ use yii\helpers\Html;
 use kartik\growl;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\modules\mrp\models\search\TipoproveedoresSearch */
+/* @var $searchModel backend\modules\mrp\models\search\ClavepresupuestalSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $modelproveedor backend\modules\mrp\models\Tipoproveedores */
+/* @var $modelclave backend\modules\mrp\models\Clavepresupuestal */
 
-$this->title = 'Catálogo de Tipo de Proveedores';
+$this->title = 'Catálogo de Claves Presupuestales';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="tipoproveedores-index">
+<div class="clavepresupuestal-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>Este catálogo debe de contener todos los tipos de proveedores que se pueden tener sean para un mismo o diferente tipo de insumo;
-        <br>NO importa si el insumo es inventariable o No.
-        <br>Solo se consideran proveedores de productos NO de Servicios ( se excluye luz, telefono, etc)</p>
 
     <?php if (Yii::$app->session->getFlash('borrar')) {
         echo growl\Growl::widget([
@@ -50,6 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
         ]);
     } ?>
+
     <?php
     $gridColumns = [
         [
@@ -63,21 +60,37 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         [
             'class' => 'kartik\grid\EditableColumn',
-            'attribute' => 'tipoproveedor',
-            //'filterInputOptions'=>['placeholder'=>'Filtrar por ...'],
-
+            'attribute' => 'clavepresupuestal',
+            //'filterInputOptions'=>['placeholder'=>'Filtrar por clave'],
+            'value'=>function ($model) {
+                return $model->clavepresupuestal;
+            },
             'editableOptions' => function () {
                 return [
                     'asPopover' =>false,
                     'options' => [
-                        'style'=>'width:400px',
+                        'style'=>'width:250px',
                     ]
                 ];
             },
+        ],
+        [
+            'class' => 'kartik\grid\EditableColumn',
+            'attribute' => 'descripcion',
             'value'=>function ($model) {
-                return $model->tipoproveedor;
-
+                return $model->descripcion;
             },
+            'editableOptions' => function () {
+                return [
+                    'size' => 'md',     // http://demos.krajee.com/popover-x#settings
+                    'inputType' => \kartik\editable\Editable::INPUT_TEXTAREA, // http://demos.krajee.com/editable
+                    'asPopover' =>false,
+                    'options' => [
+                        'style'=>'width:400px',
+                    ]
+
+                ];
+            }
         ],
     ];
 
@@ -89,10 +102,13 @@ $this->params['breadcrumbs'][] = $this->title;
     ]);
     ?>
 
-    <div class="tipoproveedores-create">
-
-        <?= $this->render('_form', [
-            'model' => $modelproveedor,
-        ]) ?>
-    </div>
 </div>
+
+
+<div class="clavepresupuestal-create">
+
+    <?= $this->render('_form', [
+        'modelclave' => $modelclave,
+    ]) ?>
+</div>
+
