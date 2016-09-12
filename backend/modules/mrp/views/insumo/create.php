@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model backend\modules\mrp\models\Insumo */
 /* @var $modelsPresentacion backend\modules\mrp\models\Presentacion */
 
-$this->title = 'Create Insumo';
+$this->title = 'Nuevo Insumo';
 $this->params['breadcrumbs'][] = ['label' => 'Insumos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

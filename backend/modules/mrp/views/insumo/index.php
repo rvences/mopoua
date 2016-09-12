@@ -55,11 +55,17 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
 
         [
-            'attribute' => 'clavepresupuestal',
+            'attribute' => 'clavepresupuestal_id',
             'width'=>'140px', // 'width'=>'7%',
             'value'=>function ($model) {
                 return $model->clavepresupuestal->clavepresupuestal;
             },
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>\yii\helpers\ArrayHelper::map(\backend\modules\mrp\models\Clavepresupuestal::find()->asArray()->orderBy('clavepresupuestal')->all(), 'id', 'clavepresupuestal'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'Clave Presupuestal'],
         ],
 
         // Haciendo el campo de Cuenta editable
