@@ -43,8 +43,8 @@ AppAsset::register($this);
         $menuItems = [
             [
                 'label' => 'MRP - Catálogos', 'items' =>array(
+                ['label' => 'Insumos', 'url'=> ['/mrp/insumo']],
                 ['label' => 'Tipo de Proveedores', 'url'=> ['/mrp/tipoproveedores']],
-                ['label' => 'Tipo de Insumos', 'url'=> ['/mrp/tipoinsumos']],
                 ['label' => 'Proveedores', 'url'=> ['/mrp/proveedores']],
                 ['label' => 'Clave Presupuestal', 'url'=> ['/mrp/clavepresupuestal']],
                 ['label' => 'Unidad de Medida', 'url'=> ['/mrp/unidadmedida']],
