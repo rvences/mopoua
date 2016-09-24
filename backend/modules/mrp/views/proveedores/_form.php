@@ -90,8 +90,13 @@ use kartik\widgets\ActiveForm;
             'class'=>'col-sm-2 control-label'
         ]); ?>
 
-        <div class="col-sm-8">
+        <div class="col-sm-5">
             <?= $form->field($model, 'notas',['showLabels'=>false])->textarea(['placeholder'=>'Otra información necesaria']); ?>
+        </div>
+
+        <div class="col-sm-3">
+            <?php $datos = ['0'=> 'No paga cajero', '1'=>'Paga Cajero'];?>
+            <?= $form->field($model, 'paga_cajero')->dropDownList($datos, ['prompt'=>'Selecciona...']); ?>
         </div>
 
         <div class="col-sm-2">

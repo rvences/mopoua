@@ -107,8 +107,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'class'=>'col-sm-2 control-label'
         ]); ?>
 
-        <div class="col-sm-10">
+        <div class="col-sm-7">
             <?= $form->field($model, 'notas',['showLabels'=>false])->textarea(['placeholder'=>'Otra información necesaria', 'readonly' =>true]); ?>
+        </div>
+
+        <div class="col-sm-3">
+            <?php $datos = ['0'=> 'No paga cajero', '1'=>'Paga Cajero'];?>
+            <?= $form->field($model, 'paga_cajero')->dropDownList($datos, ['disabled'=>true]); ?>
         </div>
 
 

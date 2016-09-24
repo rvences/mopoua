@@ -20,6 +20,7 @@ namespace backend\modules\mrp\models;
  * @property string $cuenta
  * @property string $banco
  * @property string $cliente
+ * @property integer $paga_cajero
  *
  * @property Tipoproveedores $tipoproveedor
  */
@@ -40,7 +41,7 @@ class Proveedores extends \yii\db\ActiveRecord
     {
         return [
             [['nombre_corto', 'tipoproveedor_id', 'razon_social'], 'required'],
-            [['tipoproveedor_id'], 'integer'],
+            [['tipoproveedor_id', 'paga_cajero'], 'integer'],
             [['notas'], 'string'],
             [['nombre_corto', 'clabe', 'banco', 'cliente'], 'string', 'max' => 20],
             [['razon_social', 'contacto', 'correo'], 'string', 'max' => 100],
