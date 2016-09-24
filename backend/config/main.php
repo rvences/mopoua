@@ -16,6 +16,9 @@ return [
         'mrp' => [
             'class' => 'backend\modules\mrp\Mrp',
         ],
+        'caja' => [
+            'class' => 'backend\modules\caja\Caja',
+        ],
         'gridview' =>  [
             'class' => '\kartik\grid\Module'
         ],

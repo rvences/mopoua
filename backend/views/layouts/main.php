@@ -28,7 +28,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => 'Mopoua',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -42,13 +42,26 @@ AppAsset::register($this);
     } else {
         $menuItems = [
             [
+                'label' => 'Caja', 'items' =>array(
+                ['label' => 'Apertura / Cierre', 'url'=> ['/caja/conteodiario/index']],
+            )],
+            [
                 'label' => 'MRP - Catálogos', 'items' =>array(
                 ['label' => 'Insumos', 'url'=> ['/mrp/insumo']],
                 ['label' => 'Tipo de Proveedores', 'url'=> ['/mrp/tipoproveedores']],
                 ['label' => 'Proveedores', 'url'=> ['/mrp/proveedores']],
                 ['label' => 'Clave Presupuestal', 'url'=> ['/mrp/clavepresupuestal']],
                 ['label' => 'Unidad de Medida', 'url'=> ['/mrp/unidadmedida']],
-            )]
+
+
+            )],
+
+            ['label' => 'Personal', 'items'=> array(
+                ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                    'url' => ['/site/logout'],
+                    'linkOptions' => ['data-method' => 'post']],
+            )],
+
         ];
         /*
         $menuItems[] = '<li>'
@@ -79,9 +92,9 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; Mopoua <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-right">Potenciado por Nibira</p>
     </div>
 </footer>
 
