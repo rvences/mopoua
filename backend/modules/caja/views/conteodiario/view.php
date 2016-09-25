@@ -1,77 +1,142 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
+use yii\web\View;
 
 /* @var $this yii\web\View */
+/* @var $monedas */
 /* @var $model backend\modules\caja\models\Conteodiario */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Conteodiarios', 'url' => ['index']];
+$this->title = 'Apertura / Cierre';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="conteodiario-view">
+<div class="conteodiario-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+    <div class="clavepresupuestal-form fondo">
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'username',
-            'inal1',
-            'inal2',
-            'inal3',
-            'inal4',
-            'inal5',
-            'inal6',
-            'inal7',
-            'inal8',
-            'inal9',
-            'inal10',
-            'inal11',
-            'inal12',
-            'inal13',
-            'inal14',
-            'inal15',
-            'inal16',
-            'iext1',
-            'iext2',
-            'fapertura',
-            'cnal1',
-            'cnal2',
-            'cnal3',
-            'cnal4',
-            'cnal5',
-            'cnal6',
-            'cnal7',
-            'cnal8',
-            'cnal9',
-            'cnal10',
-            'cnal11',
-            'cnal12',
-            'cnal13',
-            'cnal14',
-            'cnal15',
-            'cnal16',
-            'cext1',
-            'cext2',
-            'fcierre',
-            'montoapertura',
-            'montocierre',
-            'arqueo_id',
-        ],
-    ]) ?>
+        <div class="row">
+            <div class="col-xs-4"><b>Fecha</b></div>
+            <div class="col-xs-4"><?=\Yii::$app->formatter->asDate($model['fapertura'], 'php:D d H:i'); ?> </div>
+            <div class="col-xs-4"><?=\Yii::$app->formatter->asDate($model['fcierre'], 'php:D d H:i'); ?></div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-4"><b>Monto</b></div>
+            <div class="col-xs-4">$ <?=$model['montoapertura']; ?> </div>
+            <div class="col-xs-4">$ <?=$model['montocierre']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">Divisas</div>
+            <div class="col-xs-4">Cantidad</div>
+            <div class="col-xs-4">Cantidad</div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">Monedas</div>
+            <div class="col-xs-4">Apertura</div>
+            <div class="col-xs-4">Cierre</div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda1']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal1']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal1']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda2']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal2']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal2']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda3']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal3']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal3']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda4']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal4']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal4']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda5']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal5']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal5']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda6']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal6']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal6']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda7']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal7']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal7']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda8']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal8']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal8']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda9']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal9']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal9']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda10']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal10']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal10']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">Billetes</div>
+            <div class="col-xs-4">Apertura</div>
+            <div class="col-xs-4">Cierre</div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda11']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal11']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal11']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda12']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal12']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal12']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda13']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal13']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal13']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda14']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal14']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal14']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda15']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal15']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal15']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">$ <?=$monedas['moneda16']; ?> =</div>
+            <div class="col-xs-4"><?=$model['inal16']; ?> </div>
+            <div class="col-xs-4"><?=$model['cnal16']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">Dólares =</div>
+            <div class="col-xs-4"><?=$model['iext1']; ?> </div>
+            <div class="col-xs-4"><?=$model['cext1']; ?> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">Euros =</div>
+            <div class="col-xs-4"><?=$model['iext2']; ?> </div>
+            <div class="col-xs-4"><?=$model['cext2']; ?> </div>
+        </div>
+
+
+    </div>
 
 </div>
+
+
+

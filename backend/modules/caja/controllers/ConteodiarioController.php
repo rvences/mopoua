@@ -2,6 +2,7 @@
 
 namespace backend\modules\caja\controllers;
 
+//use backend\modules\mrp\models\Proveedores;
 use Yii;
 use backend\modules\caja\models\Conteodiario;
 //use backend\modules\caja\models\search\ConteodiarioSearch;
@@ -14,6 +15,12 @@ use yii\filters\VerbFilter;
  */
 class ConteodiarioController extends Controller
 {
+
+    public $monedas = array('moneda1'=>'0.10', 'moneda2'=>'0.20', 'moneda3'=>'0.50', 'moneda4'=>'1', 'moneda5'=>'2', 'moneda6'=>'5', 'moneda7'=>'10', 'moneda8'=>'20',
+        'moneda9'=>'50', 'moneda10'=>'100', 'moneda11'=>'20', 'moneda12'=>'50', 'moneda13'=>'100', 'moneda14'=>'200', 'moneda15'=>'500', 'moneda16'=>'1000'
+
+    );
+
     /**
      * @inheritdoc
      */
@@ -31,12 +38,6 @@ class ConteodiarioController extends Controller
 
     public function actionIndex()
     {
-        $monedas = array('moneda1'=>'0.10', 'moneda2'=>'0.20', 'moneda3'=>'0.50', 'moneda4'=>'1', 'moneda5'=>'2', 'moneda6'=>'5', 'moneda7'=>'10', 'moneda8'=>'20',
-            'moneda9'=>'50', 'moneda10'=>'100', 'moneda11'=>'20', 'moneda12'=>'50', 'moneda13'=>'100', 'moneda14'=>'200', 'moneda15'=>'500', 'moneda16'=>'1000'
-
-        );
-        // Verifica que Modelo mostrar, el de apertura o el de cierre
-
         $model = Conteodiario::findOne(['username'=> Yii::$app->user->identity->username, 'arqueo_id' => null]);
         if ($model) {
             if ( ($model->load(Yii::$app->request->post()) && $model->save()) || $model->montocierre ) {
@@ -44,7 +45,7 @@ class ConteodiarioController extends Controller
             } else {
                 return $this->render('cierre', [
                     'model' => $model,
-                    'monedas' => $monedas,
+                    'monedas' => $this->monedas,
                 ]);
             }
         } else {
@@ -54,7 +55,7 @@ class ConteodiarioController extends Controller
             } else {
                 return $this->render('apertura', [
                     'model' => $model,
-                    'monedas' => $monedas,
+                    'monedas' => $this->monedas,
                 ]);
             }
         }
@@ -65,42 +66,16 @@ class ConteodiarioController extends Controller
      * @param integer $id
      * @return mixed
      */
+
+
     public function actionView($id)
     {
+        $model = Conteodiario::findOne($id);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'monedas' => $this->monedas,
         ]);
     }
-
-    /**
-     * Creates a new Conteodiario model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Conteodiario();
-
-        $monedas = array('moneda1'=>'0.10', 'moneda2'=>'0.20', 'moneda3'=>'0.50', 'moneda4'=>'1', 'moneda5'=>'2', 'moneda6'=>'5', 'moneda7'=>'10', 'moneda8'=>'20',
-                        'moneda9'=>'50', 'moneda10'=>'100', 'moneda11'=>'20', 'moneda12'=>'50', 'moneda13'=>'100', 'moneda14'=>'200', 'moneda15'=>'500', 'moneda16'=>'1000'
-
-        );
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            // Agregando el usuario que hizo la apertura
-            //$model->username = Yii::$app->user->identity->username ;
-
-
-
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-                'monedas' => $monedas,
-            ]);
-        }
-    }
-
 
     /**
      * Deletes an existing Conteodiario model.

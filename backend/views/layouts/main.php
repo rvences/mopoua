@@ -44,6 +44,7 @@ AppAsset::register($this);
             [
                 'label' => 'Caja', 'items' =>array(
                 ['label' => 'Apertura / Cierre', 'url'=> ['/caja/conteodiario/index']],
+                ['label' => 'Pagos Diarios', 'url'=> ['/caja/conteonotas/index']],
             )],
             [
                 'label' => 'MRP - Catálogos', 'items' =>array(

@@ -3,7 +3,9 @@
 namespace backend\modules\caja\models;
 
 use Yii;
-
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 /**
  * This is the model class for table "conteodiario".
  *
@@ -61,6 +63,20 @@ class Conteodiario extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'conteodiario';
+    }
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['fapertura'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['fcierre'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+        ];
     }
 
     /**
