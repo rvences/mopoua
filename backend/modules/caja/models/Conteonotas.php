@@ -2,8 +2,10 @@
 
 namespace backend\modules\caja\models;
 
-//use Yii;
-
+use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 /**
  * This is the model class for table "conteonotas".
  *
@@ -28,14 +30,30 @@ class Conteonotas extends \yii\db\ActiveRecord
         return 'conteonotas';
     }
 
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['fconteo'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['fconteo'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
+            [['username'], 'default', 'value' =>  Yii::$app->user->identity->username],
             [['fconteo'], 'safe'],
-            [['tipo', 'formapago'], 'required'],
+            //[['tipo', 'formapago'], 'required'],
+            [['tipo', 'formapago'], 'safe'],
             [['descripcion'], 'string'],
             [['cantidad'], 'number'],
             [['arqueo_id'], 'integer'],
@@ -54,7 +72,7 @@ class Conteonotas extends \yii\db\ActiveRecord
             'username' => 'Username',
             'fconteo' => 'Fconteo',
             'tipo' => 'Tipo',
-            'descripcion' => 'Descripcion',
+            'descripcion' => 'Comercio',
             'cantidad' => 'Cantidad',
             'formapago' => 'Formapago',
             'arqueo_id' => 'Arqueo ID',
