@@ -18,7 +18,7 @@ class ArqueoSearch extends Arqueo
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['id', 'cerrado'], 'integer'],
             [['username', 'farqueo', 'comentario'], 'safe'],
             [['efectivoapertura', 'efectivocierre', 'efectivosistema', 'dineroelectronico', 'efectivoadeudoanterior', 'depositoempresa', 'retiroempresa', 'egresocompras', 'egresocomprasservicio', 'efectivofisico', 'adeudoanterior', 'adeudoactual', 'ventaturno', 'egresoturno'], 'number'],
         ];
@@ -76,6 +76,7 @@ class ArqueoSearch extends Arqueo
             'adeudoactual' => $this->adeudoactual,
             'ventaturno' => $this->ventaturno,
             'egresoturno' => $this->egresoturno,
+            'cerrado' => $this->cerrado,
         ]);
 
         $query->andFilterWhere(['like', 'username', $this->username])

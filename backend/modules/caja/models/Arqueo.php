@@ -28,6 +28,7 @@ use yii\db\Expression;
  * @property string $adeudoactual
  * @property string $ventaturno
  * @property string $egresoturno
+ * @property integer $cerrado
  *
  * @property Conteodiario[] $conteodiarios
  * @property Conteonotas[] $conteonotas
@@ -65,6 +66,7 @@ class Arqueo extends \yii\db\ActiveRecord
             [['username'], 'default', 'value' =>  Yii::$app->user->identity->username],
             [['farqueo'], 'safe'],
             [['comentario'], 'string'],
+            [['cerrado'], 'integer'],
             [['efectivoapertura', 'efectivocierre', 'efectivosistema', 'dineroelectronico', 'efectivoadeudoanterior', 'depositoempresa', 'retiroempresa', 'egresocompras', 'egresocomprasservicio', 'efectivofisico', 'adeudoanterior', 'adeudoactual', 'ventaturno', 'egresoturno'], 'number'],
             [['username'], 'string', 'max' => 255],
         ];
@@ -94,6 +96,7 @@ class Arqueo extends \yii\db\ActiveRecord
             'adeudoactual' => 'Dinero que quedo a deber el cajero',
             'ventaturno' => 'Cuanto se vendio en el turno',
             'egresoturno' => 'Cuando se gasto en el turno',
+            'cerrado' => 'Turno cerrado',
         ];
     }
 

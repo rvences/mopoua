@@ -42,6 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'adeudoactual',
             // 'ventaturno',
             // 'egresoturno',
+            // 'cerrado',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

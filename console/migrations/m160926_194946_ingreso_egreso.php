@@ -28,6 +28,10 @@ class m160926_194946_ingreso_egreso extends Migration
         $this->addColumn('arqueo', 'adeudoactual', $this->money(9,2));
         $this->addColumn('arqueo', 'ventaturno', $this->money(9,2));
         $this->addColumn('arqueo', 'egresoturno', $this->money(9,2));
+
+        $this->addColumn('arqueo', 'cerrado', $this->boolean()->defaultValue(false));
+
+
         $this->createTable('{{tipoingresoegreso}}', [
             'id' => $this->primaryKey(),
             'tipo' => $this->string(50)->notNull(),
@@ -70,6 +74,7 @@ class m160926_194946_ingreso_egreso extends Migration
         $this->dropColumn('arqueo', 'adeudoactual');
         $this->dropColumn('arqueo', 'ventaturno');
         $this->dropColumn('arqueo', 'egresoturno');
+        $this->dropColumn('arqueo', 'cerrado');
 
 
 

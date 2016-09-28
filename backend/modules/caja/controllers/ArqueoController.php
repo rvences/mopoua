@@ -68,13 +68,17 @@ class ArqueoController extends Controller
      */
     public function actionCreate()
     {
+        $arqueo_cerrado_id = Arqueo::find()->select(['id'])->where(['username' => Yii::$app->user->identity->username, 'cerrado' => 0])->one();
+
+        if ($arqueo_cerrado_id) { return $this->redirect(['view', 'id' => $arqueo_cerrado_id->id ]); }
+
+
         /*
         echo $apertura->createCommand()->sql;
         echo $apertura->createCommand()->getRawSql();
         */
         $model = new Arqueo;
         $modelsNotas = [new Conteonotas];
-
         $ingresoegreso = Tipoingresoegreso::find()->all();
 
 
@@ -104,9 +108,9 @@ class ArqueoController extends Controller
 
                         // Obteniendo la info de la apertura
                         $apertura = Conteodiario::find()->select(['montoapertura', 'montocierre'])->where(['arqueo_id' => null, 'username'=> Yii::$app->user->identity->username ])->one();
-                        // Cantidad de dinero con que se aperturo la caja
+                        // Cantidad que se conto de dinero con que se aperturo la caja
                         $model->efectivoapertura = $apertura->montoapertura;
-                        // Cantidad de dinero con el que se cerro la caja
+                        // Cantidad que se conto de dinero con el que se cerro la caja
                         $model->efectivocierre = $apertura->montocierre;
                         // Ventas en efectivo reportadas por el SoftRestaurant -- Efectivo Real - Lo que dice la máquina que vendió
                         $model->efectivosistema =        Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'INGRESO EFECTIVO'])->asArray()->sum('cantidad');
@@ -124,23 +128,33 @@ class ArqueoController extends Controller
                         $model->egresocomprasservicio =  Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'EGRESO SERVICIO'])->asArray()->sum('cantidad');
 
                         // Efectivo que debe de existir en la caja; debe ser igual a lo que reporto el SoftRestaurant
-                        $model->efectivofisico =      	 $model->efectivocierre - $model->efectivoapertura + $model->efectivoadeudoanterior +
-                                                         $model->depositoempresa - $model->egresocompras - $model->egresocomprasservicio - $model->retiroempresa;
+                        $model->efectivofisico =    $model->efectivoapertura + $model->efectivosistema + $model->depositoempresa + $model->efectivoadeudoanterior +
+                                                    $model->depositoempresa - $model->egresocompras - $model->egresocomprasservicio - $model->retiroempresa;
+
+                        $adeudoanterior = 		 Arqueo::find()->select(['adeudoactual'])->where(['username'=> Yii::$app->user->identity->username , 'cerrado' => true])->orderBy(['id' => SORT_ASC])->one();
 
 
-                        $adeudoanterior = 		 Arqueo::find()->select(['adeudoactual'])->where(['username'=> Yii::$app->user->identity->username ])->orderBy(['id' => SORT_ASC])->one();
+
 
                         // Cuanto quedo a deber el cajero el día anterior
-                        $model->adeudoanterior = (empty($adeudoanterior)) ? $adeudoanterior : 0;
+                        $model->adeudoanterior = (empty($adeudoanterior->adeudoactual)) ? 0 : $adeudoanterior->adeudoactual;
+
+
                         // Dinero que quedo a deber el cajero
-                        $model->adeudoactual =      	 $model->efectivosistema - $model->efectivofisico + $model->adeudoanterior -  $model->efectivoadeudoanterior;
+                        $model->adeudoactual =      	 $model->efectivocierre - $model->efectivofisico + $model->adeudoanterior -  $model->efectivoadeudoanterior;
+
                         // Cuanto se vendio en el turno
                         $model->ventaturno =         	 $model->efectivosistema + $model->dineroelectronico;
                         // Cuando se gasto en el turno
                         $model->egresoturno =        	 $model->egresocompras + $model->egresocomprasservicio;
 
                         $model->save(false);
-
+/*
+                        echo "<pre>";
+                        print_r($model);
+                        echo "</pre>";
+                        exit;
+*/
                         $transaction->commit();
                         return $this->redirect(['view', 'id' => $model->id]);
                     }
@@ -203,6 +217,27 @@ class ArqueoController extends Controller
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    public function actionCerrar($id) {
+
+        $model = $this->findModel($id);
+
+        $transaction = \Yii::$app->db->beginTransaction();
+        try {
+            $model->cerrado = true;
+            $flag = $model->save(false);
+            if ($flag) {
+
+                Conteodiario::updateAll(['arqueo_id' => $model->id], ['username'=> Yii::$app->user->identity->username, 'arqueo_id' => null]);
+                $transaction->commit();
+                return $this->redirect(['view', 'id' => $model->id]);
+
+            }
+
+        } catch (Exception $e) {
+            $transaction->rollBack();
         }
     }
 }
