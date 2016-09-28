@@ -2,12 +2,10 @@
 
 namespace backend\modules\caja\controllers;
 
-use backend\modules\caja\models\Conteonotas;
-use backend\modules\caja\models\Conteodiario;
 use backend\models\Model;
-use yii\widgets\ActiveForm;
-use yii\helpers\ArrayHelper;
-use yii\web\Response;
+use backend\modules\caja\models\Conteodiario;
+use backend\modules\caja\models\Conteonotas;
+use backend\modules\caja\models\Tipoingresoegreso;
 use Yii;
 use backend\modules\caja\models\Arqueo;
 use backend\modules\caja\models\search\ArqueoSearch;
@@ -70,69 +68,81 @@ class ArqueoController extends Controller
      */
     public function actionCreate()
     {
+        /*
+        echo $apertura->createCommand()->sql;
+        echo $apertura->createCommand()->getRawSql();
+        */
+        $model = new Arqueo;
+        $modelsNotas = [new Conteonotas];
+
+        $ingresoegreso = Tipoingresoegreso::find()->all();
 
 
+        //if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) ) {
 
-
-
-
-
-
-
-
-
-        $modelArqueo = new Arqueo;
-        $modelsConteonotas = [new Conteonotas];
-        if ($modelArqueo->load(Yii::$app->request->post())) {
-
-            $modelsConteonotas = Model::createMultiple(Conteonotas::className());
-            Model::loadMultiple($modelsConteonotas, Yii::$app->request->post());
-
-            // ajax validation
-            if (Yii::$app->request->isAjax) {
-                Yii::$app->response->format = Response::FORMAT_JSON;
-                return ArrayHelper::merge(
-                    ActiveForm::validateMultiple($modelsConteonotas),
-                    ActiveForm::validate($modelArqueo)
-                );
-            }
+            $modelsNotas = Model::createMultiple(Conteonotas::className());
+            Model::loadMultiple($modelsNotas, Yii::$app->request->post());
 
             // validate all models
-            $valid = $modelArqueo->validate();
-            $valid = Model::validateMultiple($modelsConteonotas) && $valid;
-
-            // Obteniendo los datos del conteo diario
-            $conteo = Conteodiario::findOne(['username' => Yii::$app->user->identity->username, 'arqueo_id' => null]);
-
-            $modelArqueo->montoapertura = $conteo->montoapertura;
-            $modelArqueo->montocierre = $conteo->montocierre;
+            $valid = $model->validate();
+            $valid = Model::validateMultiple($modelsNotas) && $valid;
 
             if ($valid) {
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
-
-                    if ($flag = $modelArqueo->save(false)) {
-                        $total = 0;
-                        foreach ($modelsConteonotas as $modelConteonotas) {
-                            // Total en notas
-                            $total += $modelConteonotas->cantidad;
-                            $modelConteonotas->tipo = 'EGRESO';
-                            $modelConteonotas->arqueo_id = $modelArqueo->id;
-                            if (! ($flag = $modelConteonotas->save(false))) {
+                    if ($flag = $model->save(false)) {
+                        foreach ($modelsNotas as $modelNotas) {
+                            $modelNotas->arqueo_id = $model->id;
+                            if (!($flag = $modelNotas->save(false))) {
                                 $transaction->rollBack();
                                 break;
                             }
                         }
                     }
                     if ($flag) {
-                        // Actualizando Arqueo
-                        $modelArqueo->montoegreso = $total;
-                        $modelArqueo->save();
-                        //$model = $this->findModel($id);
 
+                        // Obteniendo la info de la apertura
+                        $apertura = Conteodiario::find()->select(['montoapertura', 'montocierre'])->where(['arqueo_id' => null, 'username'=> Yii::$app->user->identity->username ])->one();
+                        // Cantidad de dinero con que se aperturo la caja
+                        $model->efectivoapertura = $apertura->montoapertura;
+                        // Cantidad de dinero con el que se cerro la caja
+                        $model->efectivocierre = $apertura->montocierre;
+                        // Ventas en efectivo reportadas por el SoftRestaurant -- Efectivo Real - Lo que dice la máquina que vendió
+                        $model->efectivosistema =        Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'INGRESO EFECTIVO'])->asArray()->sum('cantidad');
+                        // Compras realizadas con Tarjeta de Debido o Credito
+                        $model->dineroelectronico =      Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'INGRESO ELECTRONICO'])->asArray()->sum('cantidad');
+                        // Dinero que se deposito de forma adicional ( de compras u otra cosa que se retiro y no se deposito nuevamente )
+                        $model->efectivoadeudoanterior = Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'INGRESO ADEUDOS ANTERIORES'])->asArray()->sum('cantidad');
+                        // Dinero que deposita la empresa para agregar flujo de efectivo ( Cuando se queda sin dinero o cambio la caja)
+                        $model->depositoempresa =        Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'INGRESO EMPRESA'])->asArray()->sum('cantidad');
+                        // Dinero que se retira de la caja por exceso de efectivo por seguridad
+                        $model->retiroempresa =          Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'RETIRO EMPRESA'])->asArray()->sum('cantidad');
+                        // Compras realizadas con dinero de la caja
+                        $model->egresocompras =          Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'EGRESO COMPRA'])->asArray()->sum('cantidad');
+                        // Pagos de servicios con dinero de la caja
+                        $model->egresocomprasservicio =  Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'EGRESO SERVICIO'])->asArray()->sum('cantidad');
+
+                        // Efectivo que debe de existir en la caja; debe ser igual a lo que reporto el SoftRestaurant
+                        $model->efectivofisico =      	 $model->efectivocierre - $model->efectivoapertura + $model->efectivoadeudoanterior +
+                                                         $model->depositoempresa - $model->egresocompras - $model->egresocomprasservicio - $model->retiroempresa;
+
+
+                        $adeudoanterior = 		 Arqueo::find()->select(['adeudoactual'])->where(['username'=> Yii::$app->user->identity->username ])->orderBy(['id' => SORT_ASC])->one();
+
+                        // Cuanto quedo a deber el cajero el día anterior
+                        $model->adeudoanterior = (empty($adeudoanterior)) ? $adeudoanterior : 0;
+                        // Dinero que quedo a deber el cajero
+                        $model->adeudoactual =      	 $model->efectivosistema - $model->efectivofisico + $model->adeudoanterior -  $model->efectivoadeudoanterior;
+                        // Cuanto se vendio en el turno
+                        $model->ventaturno =         	 $model->efectivosistema + $model->dineroelectronico;
+                        // Cuando se gasto en el turno
+                        $model->egresoturno =        	 $model->egresocompras + $model->egresocomprasservicio;
+
+                        $model->save(false);
 
                         $transaction->commit();
-                        return $this->redirect(['view', 'id' => $modelArqueo->id]);
+                        return $this->redirect(['view', 'id' => $model->id]);
                     }
                 } catch (Exception $e) {
                     $transaction->rollBack();
@@ -141,50 +151,11 @@ class ArqueoController extends Controller
         }
 
         return $this->render('create', [
-            'modelArqueo' => $modelArqueo,
-            'modelsConteonotas' => (empty($modelsConteonotas)) ? [new Conteonotas] : $modelsConteonotas
+            'model' => $model,
+            'modelsNotas' => (empty($modelsNotas)) ? [new Notas] : $modelsNotas,
+            //'modelsNotas' => $modelsNotas,
+            'ingresoegreso' => $ingresoegreso,
         ]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-        $model = new Arqueo();
-
-
-
-
-        //if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        if ($model->load(Yii::$app->request->post()) ) {
-            $conteo = Conteodiario::findOne(['username' => Yii::$app->user->identity->username, 'arqueo_id' => null]);
-
-            $model->montoapertura = $conteo->montoapertura;
-            $model->montocierre = $conteo->montocierre;
-
-            $model->save();
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }*/
     }
 
     /**

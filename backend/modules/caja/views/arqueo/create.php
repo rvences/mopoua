@@ -4,10 +4,11 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $modelArqueo backend\modules\caja\models\Arqueo */
-/* @var $modelsConteonotas \backend\modules\caja\models\Conteonotas */
+/* @var $model backend\modules\caja\models\Arqueo */
+/* @var $modelsNotas backend\modules\caja\models\Conteonotas */
+/* @var $ingresoegreso backend\modules\caja\models\Tipoingresoegreso */
 
-$this->title = 'Create Arqueo';
+$this->title = 'Creando Arqueo';
 $this->params['breadcrumbs'][] = ['label' => 'Arqueos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -16,8 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
-        'model' => $modelArqueo,
-        'modelsConteonotas' => $modelsConteonotas,
+        'model' => $model,
+        'modelsNotas' => $modelsNotas,
+        'ingresoegreso' => $ingresoegreso,
     ]) ?>
 
 </div>

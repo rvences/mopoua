@@ -45,6 +45,9 @@ AppAsset::register($this);
                 'label' => 'Caja', 'items' =>array(
                 ['label' => 'Apertura / Cierre', 'url'=> ['/caja/conteodiario/index']],
                 ['label' => 'Arqueo', 'url'=> ['/caja/arqueo/create']],
+                ['label' => 'Caja - Catálogos' , 'items' =>array(
+                    ['label' => 'Insumos', 'url'=> ['/caja/tipoingresoegreso']],
+                )],
             )],
             [
                 'label' => 'MRP - Catálogos', 'items' =>array(

@@ -18,9 +18,9 @@ class ArqueoSearch extends Arqueo
     public function rules()
     {
         return [
-            [['id', 'liquidoadeudo'], 'integer'],
+            [['id'], 'integer'],
             [['username', 'farqueo', 'comentario'], 'safe'],
-            [['montoadeudo', 'montoapertura', 'montocierre', 'montoingreso', 'montoegreso', 'montoretiro'], 'number'],
+            [['efectivoapertura', 'efectivocierre', 'efectivosistema', 'dineroelectronico', 'efectivoadeudoanterior', 'depositoempresa', 'retiroempresa', 'egresocompras', 'egresocomprasservicio', 'efectivofisico', 'adeudoanterior', 'adeudoactual', 'ventaturno', 'egresoturno'], 'number'],
         ];
     }
 
@@ -62,13 +62,20 @@ class ArqueoSearch extends Arqueo
         $query->andFilterWhere([
             'id' => $this->id,
             'farqueo' => $this->farqueo,
-            'montoadeudo' => $this->montoadeudo,
-            'montoapertura' => $this->montoapertura,
-            'montocierre' => $this->montocierre,
-            'montoingreso' => $this->montoingreso,
-            'montoegreso' => $this->montoegreso,
-            'montoretiro' => $this->montoretiro,
-            'liquidoadeudo' => $this->liquidoadeudo,
+            'efectivoapertura' => $this->efectivoapertura,
+            'efectivocierre' => $this->efectivocierre,
+            'efectivosistema' => $this->efectivosistema,
+            'dineroelectronico' => $this->dineroelectronico,
+            'efectivoadeudoanterior' => $this->efectivoadeudoanterior,
+            'depositoempresa' => $this->depositoempresa,
+            'retiroempresa' => $this->retiroempresa,
+            'egresocompras' => $this->egresocompras,
+            'egresocomprasservicio' => $this->egresocomprasservicio,
+            'efectivofisico' => $this->efectivofisico,
+            'adeudoanterior' => $this->adeudoanterior,
+            'adeudoactual' => $this->adeudoactual,
+            'ventaturno' => $this->ventaturno,
+            'egresoturno' => $this->egresoturno,
         ]);
 
         $query->andFilterWhere(['like', 'username', $this->username])

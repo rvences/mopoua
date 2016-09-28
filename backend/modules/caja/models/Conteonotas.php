@@ -52,12 +52,12 @@ class Conteonotas extends \yii\db\ActiveRecord
         return [
             [['username'], 'default', 'value' =>  Yii::$app->user->identity->username],
             [['fconteo'], 'safe'],
-            //[['tipo', 'formapago'], 'required'],
-            [['tipo', 'formapago'], 'safe'],
+            [['descripcion', 'cantidad'], 'required'],
+            [['tipo'], 'safe'],
             [['descripcion'], 'string'],
             [['cantidad'], 'number'],
             [['arqueo_id'], 'integer'],
-            [['username', 'tipo', 'formapago'], 'string', 'max' => 255],
+            [['username', 'tipo'], 'string', 'max' => 255],
             [['arqueo_id'], 'exist', 'skipOnError' => true, 'targetClass' => Arqueo::className(), 'targetAttribute' => ['arqueo_id' => 'id']],
         ];
     }
@@ -74,7 +74,6 @@ class Conteonotas extends \yii\db\ActiveRecord
             'tipo' => 'Tipo',
             'descripcion' => 'Comercio',
             'cantidad' => 'Cantidad',
-            'formapago' => 'Formapago',
             'arqueo_id' => 'Arqueo ID',
         ];
     }

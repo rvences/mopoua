@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model backend\modules\caja\models\Arqueo */
+/* @var $model backend\modules\caja\models\Tipoingresoegreso */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Arqueos', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Tipoingresoegresos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="arqueo-view">
+<div class="tipoingresoegreso-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,23 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'username',
-            'farqueo',
-            'comentario:ntext',
-            'efectivoapertura',
-            'efectivocierre',
-            'efectivosistema',
-            'dineroelectronico',
-            'efectivoadeudoanterior',
-            'depositoempresa',
-            'retiroempresa',
-            'egresocompras',
-            'egresocomprasservicio',
-            'efectivofisico',
-            'adeudoanterior',
-            'adeudoactual',
-            'ventaturno',
-            'egresoturno',
+            'tipo',
+            'descripcion',
         ],
     ]) ?>
 
