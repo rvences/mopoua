@@ -68,6 +68,16 @@ class ArqueoController extends Controller
      */
     public function actionCreate()
     {
+        // No permitir arqueo si NO existe conteodiario
+        $conteofinalizado = Conteodiario::find()->select(['id'])->where(['is not', 'montoapertura', null])
+            ->andWhere(['is not', 'montocierre', null])->andWhere(['is', 'arqueo_id', null])->exists();
+        //echo $conteofinalizado->createCommand()->getRawSql();
+        if (!$conteofinalizado) {
+            Yii::$app->getSession()->addFlash('warning', 'Realiza la apertura y cierre primero'); // //String, can only be set to danger, success, warning, info, and growl
+            return Yii::$app->getResponse()->redirect(array('caja/conteodiario/index'));
+        }
+
+
         $arqueo_cerrado_id = Arqueo::find()->select(['id'])->where(['username' => Yii::$app->user->identity->username, 'cerrado' => 0])->one();
 
         if ($arqueo_cerrado_id) { return $this->redirect(['view', 'id' => $arqueo_cerrado_id->id ]); }
@@ -166,7 +176,7 @@ class ArqueoController extends Controller
 
         return $this->render('create', [
             'model' => $model,
-            'modelsNotas' => (empty($modelsNotas)) ? [new Notas] : $modelsNotas,
+            'modelsNotas' => (empty($modelsNotas)) ? [new Conteonotas()] : $modelsNotas,
             //'modelsNotas' => $modelsNotas,
             'ingresoegreso' => $ingresoegreso,
         ]);
@@ -239,5 +249,6 @@ class ArqueoController extends Controller
         } catch (Exception $e) {
             $transaction->rollBack();
         }
+        return $this->redirect(['view', 'id' => $model->id]);
     }
 }

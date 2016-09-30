@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
+//use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model backend\modules\caja\models\Arqueo */
@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Cerrar', ['cerrar', 'id' => $model->id], [
+        <?= Html::a('Finalizar el turno', ['cerrar', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => '¿ Estas seguro de cerrar el turno ?',
@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
         <div class="col-sm-4">
-            Compras o pagos realizados en efectivo: $<?= $model->egresocompras + $model->egresocomprasservicio ?>
+            Compras o pagos realizados en efectivo: $<?= intval($model->egresocompras) + intval($model->egresocomprasservicio) ?>
         </div>
         <div class="col-sm-4">
             Retiro de Excedente en caja fue de: $<?= $model->retiroempresa ?>

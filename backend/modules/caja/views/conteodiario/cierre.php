@@ -232,9 +232,11 @@ $(function(){
 
         <div class="form-group kv-fieldset-inline">
             <div class="form-group">
-                <?= Html::submitButton($model->isNewRecord ? 'Cierre' : 'Cierre', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+                <?= Html::submitButton($model->isNewRecord ? 'Cierre' : 'Cierre', ['data' => [
+                    'confirm' => '¿ Conteo de efectivo completado ?',
+                    'method' => 'post',
+                ],'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
             </div>
-
 
 
         </div>
