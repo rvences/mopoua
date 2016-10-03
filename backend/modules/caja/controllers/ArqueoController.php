@@ -68,31 +68,24 @@ class ArqueoController extends Controller
      */
     public function actionCreate()
     {
-        // No permitir arqueo si NO existe conteodiario
+        // Comprobando que se haya echo el conteodiario antes de iniciar el arqueo
         $conteofinalizado = Conteodiario::find()->select(['id'])->where(['is not', 'montoapertura', null])
             ->andWhere(['is not', 'montocierre', null])->andWhere(['is', 'arqueo_id', null])->exists();
-        //echo $conteofinalizado->createCommand()->getRawSql();
         if (!$conteofinalizado) {
-            Yii::$app->getSession()->addFlash('warning', 'Realiza la apertura y cierre primero'); // //String, can only be set to danger, success, warning, info, and growl
+            Yii::$app->getSession()->addFlash('warning', 'Realiza la apertura y cierre primero');
             return Yii::$app->getResponse()->redirect(array('caja/conteodiario/index'));
         }
 
 
+        // En caso de que el arqueo ya se haya realizado hacer esto
         $arqueo_cerrado_id = Arqueo::find()->select(['id'])->where(['username' => Yii::$app->user->identity->username, 'cerrado' => 0])->one();
-
         if ($arqueo_cerrado_id) { return $this->redirect(['view', 'id' => $arqueo_cerrado_id->id ]); }
-
-
-        /*
-        echo $apertura->createCommand()->sql;
-        echo $apertura->createCommand()->getRawSql();
-        */
+            //echo $apertura->createCommand()->sql;
+            //echo $apertura->createCommand()->getRawSql();
         $model = new Arqueo;
         $modelsNotas = [new Conteonotas];
         $ingresoegreso = Tipoingresoegreso::find()->all();
 
-
-        //if ($model->load(Yii::$app->request->post()) && $model->save()) {
         if ($model->load(Yii::$app->request->post()) ) {
 
             $modelsNotas = Model::createMultiple(Conteonotas::className());
@@ -115,7 +108,6 @@ class ArqueoController extends Controller
                         }
                     }
                     if ($flag) {
-
                         // Obteniendo la info de la apertura
                         $apertura = Conteodiario::find()->select(['montoapertura', 'montocierre'])->where(['arqueo_id' => null, 'username'=> Yii::$app->user->identity->username ])->one();
                         // Cantidad que se conto de dinero con que se aperturo la caja
@@ -140,16 +132,9 @@ class ArqueoController extends Controller
                         // Efectivo que debe de existir en la caja; debe ser igual a lo que reporto el SoftRestaurant
                         $model->efectivofisico =    $model->efectivoapertura + $model->efectivosistema + $model->depositoempresa + $model->efectivoadeudoanterior +
                                                     $model->depositoempresa - $model->egresocompras - $model->egresocomprasservicio - $model->retiroempresa;
-
                         $adeudoanterior = 		 Arqueo::find()->select(['adeudoactual'])->where(['username'=> Yii::$app->user->identity->username , 'cerrado' => true])->orderBy(['id' => SORT_ASC])->one();
-
-
-
-
                         // Cuanto quedo a deber el cajero el día anterior
                         $model->adeudoanterior = (empty($adeudoanterior->adeudoactual)) ? 0 : $adeudoanterior->adeudoactual;
-
-
                         // Dinero que quedo a deber el cajero
                         $model->adeudoactual =      	 $model->efectivocierre - $model->efectivofisico + $model->adeudoanterior -  $model->efectivoadeudoanterior;
 
@@ -157,14 +142,10 @@ class ArqueoController extends Controller
                         $model->ventaturno =         	 $model->efectivosistema + $model->dineroelectronico;
                         // Cuando se gasto en el turno
                         $model->egresoturno =        	 $model->egresocompras + $model->egresocomprasservicio;
-
+                        // Nuevas claves temporales
+                        $model->clave1 = Arqueo::getClave(5);
+                        $model->clave2 = Arqueo::getClave(6);
                         $model->save(false);
-/*
-                        echo "<pre>";
-                        print_r($model);
-                        echo "</pre>";
-                        exit;
-*/
                         $transaction->commit();
                         return $this->redirect(['view', 'id' => $model->id]);
                     }
@@ -177,7 +158,6 @@ class ArqueoController extends Controller
         return $this->render('create', [
             'model' => $model,
             'modelsNotas' => (empty($modelsNotas)) ? [new Conteonotas()] : $modelsNotas,
-            //'modelsNotas' => $modelsNotas,
             'ingresoegreso' => $ingresoegreso,
         ]);
     }
@@ -239,11 +219,11 @@ class ArqueoController extends Controller
             $model->cerrado = true;
             $flag = $model->save(false);
             if ($flag) {
-
                 Conteodiario::updateAll(['arqueo_id' => $model->id], ['username'=> Yii::$app->user->identity->username, 'arqueo_id' => null]);
                 $transaction->commit();
-                return $this->redirect(['view', 'id' => $model->id]);
-
+                return $this->render('cerrar', [
+                    'model' => $this->findModel($id),
+                ]);
             }
 
         } catch (Exception $e) {

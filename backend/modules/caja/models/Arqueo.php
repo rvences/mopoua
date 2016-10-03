@@ -121,4 +121,20 @@ class Arqueo extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Conteonotas::className(), ['arqueo_id' => 'id']);
     }
+
+    /**
+     * @param $largo la longitus de la clave a utilizar
+     */
+    public static function getClave($largo) {
+        $datos = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $total = strlen($datos) -1;
+        $hash = null;
+        for ($x=1; $x<= $largo; $x++) {
+            $pos = rand(0, $total);
+            $hash .= substr($datos, $pos, 1);
+        }
+
+        return $hash;
+    }
+
 }

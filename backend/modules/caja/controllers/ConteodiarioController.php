@@ -5,6 +5,7 @@ namespace backend\modules\caja\controllers;
 //use backend\modules\mrp\models\Proveedores;
 use Yii;
 use backend\modules\caja\models\Conteodiario;
+use backend\modules\caja\models\Arqueo;
 //use backend\modules\caja\models\search\ConteodiarioSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -53,6 +54,15 @@ class ConteodiarioController extends Controller
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
+                $arqueo_anterior = Arqueo::find()->select(['clave1', 'clave2', 'usercontinua'])->orderBy(['id' => SORT_DESC])->one();
+
+                    //$arqueo_anterior = Arqueo::find()->select(['clave1', 'clave2', 'usercontinua'])->orderBy(['id' => SORT_DESC]);
+                    //echo $arqueo_anterior->createCommand()->getRawSql();
+                if ($arqueo_anterior->usercontinua == Yii::$app->user->identity->username) {
+                    Yii::$app->getSession()->addFlash('warning', 'Tus claves temporales de acceso son:<br> Cajero: ' .
+                        $arqueo_anterior->clave1 . ' Caja: ' . $arqueo_anterior->clave2 );
+                }
+
                 return $this->render('apertura', [
                     'model' => $model,
                     'monedas' => $this->monedas,
@@ -71,6 +81,15 @@ class ConteodiarioController extends Controller
     public function actionView($id)
     {
         $model = Conteodiario::findOne($id);
+        // Obteniendo el cierre del turno anterior para validar la diferencia entre los usuarios
+        if ($model->montoapertura && is_null($model->montocierre) ) {
+            $arqueo_anterior = Arqueo::find()->select(['username', 'efectivocierre'])->orderBy(['id' => SORT_DESC])->one();
+            if ($arqueo_anterior->efectivocierre != $model->montoapertura) {
+                Yii::$app->getSession()->addFlash('danger', 'Contacta a tu superior, existe una diferencia entre tu apertura y el cierre anterior ' . $model->username .
+                    ' por un monto de :$ ' . abs($model->montoapertura - $arqueo_anterior->efectivocierre) );
+            }
+        }
+
         return $this->render('view', [
             'model' => $model,
             'monedas' => $this->monedas,
