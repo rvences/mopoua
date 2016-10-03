@@ -51,13 +51,6 @@ class m160926_194946_ingreso_egreso extends Migration
     public function down()
     {
         echo "Catalogo de Ingreso y Egreso.\n";
-        $this->dropColumn('arqueo', 'montoadeudo');
-        $this->dropColumn('arqueo', 'montoapertura');
-        $this->dropColumn('arqueo', 'montocierre');
-        $this->dropColumn('arqueo', 'montoingreso');
-        $this->dropColumn('arqueo', 'montoegreso');
-        $this->dropColumn('arqueo', 'montoretiro');
-        $this->dropColumn('arqueo', 'liquidoadeudo');
 
         $this->dropTable('tipoingresoegreso');
         $this->dropColumn('arqueo', 'efectivoapertura');

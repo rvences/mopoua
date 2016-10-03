@@ -9,7 +9,7 @@ use kartik\form\ActiveForm;
 /* @var $monedas */
 /* @var $model backend\modules\caja\models\Conteodiario */
 
-$this->title = 'Conteo Apertura';
+$this->title = 'Conteo de Efectivo para la Apertura';
 $this->params['breadcrumbs'][] = ['label' => 'Apertura', 'url' => ['create']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -233,7 +233,7 @@ $(function(){
         <div class="form-group kv-fieldset-inline">
             <div class="form-group">
                 <?= Html::submitButton($model->isNewRecord ? 'Apertura' : 'Cierre', ['data' => [
-                    'confirm' => '¿ Conteo de efectivo completado ?',
+                    'confirm' => '¿ Datos correctos ?, No se puede deshacer este cambio',
                     'method' => 'post',
                 ],'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
             </div>

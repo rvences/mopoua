@@ -28,7 +28,11 @@ use yii\db\Expression;
  * @property string $adeudoactual
  * @property string $ventaturno
  * @property string $egresoturno
+ * @property string $propina
  * @property integer $cerrado
+ * @property string $clave1
+ * @property string $clave2
+ * @property string $usercontinua
  *
  * @property Conteodiario[] $conteodiarios
  * @property Conteonotas[] $conteonotas
@@ -66,10 +70,11 @@ class Arqueo extends \yii\db\ActiveRecord
             [['username'], 'default', 'value' =>  Yii::$app->user->identity->username],
             [['farqueo'], 'safe'],
             [['comentario'], 'string'],
-            [['comentario'], 'required'],
+            [['comentario', 'propina','usercontinua'], 'required'],
             [['cerrado'], 'integer'],
-            [['efectivoapertura', 'efectivocierre', 'efectivosistema', 'dineroelectronico', 'efectivoadeudoanterior', 'depositoempresa', 'retiroempresa', 'egresocompras', 'egresocomprasservicio', 'efectivofisico', 'adeudoanterior', 'adeudoactual', 'ventaturno', 'egresoturno'], 'number'],
-            [['username'], 'string', 'max' => 255],
+            [['efectivoapertura', 'efectivocierre', 'efectivosistema', 'dineroelectronico', 'efectivoadeudoanterior', 'depositoempresa', 'retiroempresa', 'egresocompras', 'egresocomprasservicio', 'efectivofisico', 'adeudoanterior', 'adeudoactual', 'ventaturno', 'egresoturno', 'propina'], 'number'],
+            [['username', 'usercontinua'], 'string', 'max' => 255],
+		    [['clave1', 'clave2'], 'string', 'max' => 8],
         ];
     }
 

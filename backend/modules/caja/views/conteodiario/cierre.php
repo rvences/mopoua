@@ -9,7 +9,7 @@ use kartik\form\ActiveForm;
 /* @var $monedas */
 /* @var $model backend\modules\caja\models\Conteodiario */
 
-$this->title = 'Conteo Cierre';
+$this->title = 'Conteo de Efectivo para el Cierre';
 $this->params['breadcrumbs'][] = ['label' => 'Cierre', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
