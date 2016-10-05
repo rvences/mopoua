@@ -123,10 +123,10 @@ class Arqueo extends \yii\db\ActiveRecord
     }
 
     /**
-     * @param $largo la longitus de la clave a utilizar
+     * @param $largo int longitus de la clave a utilizar
      */
     public static function getClave($largo) {
-        $datos = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $datos = '0123456789';
         $total = strlen($datos) -1;
         $hash = null;
         for ($x=1; $x<= $largo; $x++) {

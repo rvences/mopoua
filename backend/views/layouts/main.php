@@ -43,11 +43,11 @@ AppAsset::register($this);
         $menuItems = [
             [
                 'label' => 'Caja', 'items' =>array(
-                ['label' => 'Apertura / Cierre', 'url'=> ['/caja/conteodiario/index']],
-                ['label' => 'Arqueo', 'url'=> ['/caja/arqueo/create']],
+                ['label' => 'Apertura / Cierre', 'url'=> ['/caja/conteodiario/index'], 'visible' => \common\models\User::isUserCaja(Yii::$app->user->identity->id)],
+                ['label' => 'Arqueo', 'url'=> ['/caja/arqueo/create'], 'visible' => \common\models\User::isUserCaja(Yii::$app->user->identity->id)],
                 ['label' => 'Caja - Catálogos' , 'items' =>array(
                     ['label' => 'Insumos', 'url'=> ['/caja/tipoingresoegreso']],
-                )],
+                ), 'visible' => \common\models\User::isUserAdmin(Yii::$app->user->identity->id)],
             )],
             [
                 'label' => 'MRP - Catálogos', 'items' =>array(
@@ -58,7 +58,7 @@ AppAsset::register($this);
                 ['label' => 'Unidad de Medida', 'url'=> ['/mrp/unidadmedida']],
 
 
-            )],
+            ), 'visible' => \common\models\User::isUserAdmin(Yii::$app->user->identity->id)],
 
             ['label' => 'Personal', 'items'=> array(
                 ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',

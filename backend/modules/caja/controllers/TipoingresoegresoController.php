@@ -8,6 +8,7 @@ use backend\modules\caja\models\search\TipoingresoegresoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * TipoingresoegresoController implements the CRUD actions for Tipoingresoegreso model.
@@ -20,6 +21,27 @@ class TipoingresoegresoController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                // Acciones para el Controlador
+                'only' => ['index', 'delete' ],
+                'rules' => [
+                    [
+                        // Establece que tiene permisos el SEO
+                        'allow' => true,
+                        // El usuario se le asignan permisos en las siguientes acciones
+                        'actions' =>  ['index', 'delete' ],
+                        // Todos los usuarios autenticados
+                        'roles' => ['@'],
+                        //Este método nos permite crear un filtro sobre la identidad del usuario
+                        //y así establecer si tiene permisos o no
+                        'matchCallback' => function () {
+                            //Llamada al método que comprueba si es un vendedor
+                            return \common\models\User::isUserAdmin(Yii::$app->user->identity->id);
+                        },
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -78,80 +100,8 @@ class TipoingresoegresoController extends Controller
             'dataProvider' => $dataProvider,
             'modelingresoegreso' => $modelingresoegreso,
         ]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-        $searchModel = new TipoingresoegresoSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-        */
     }
 
-    /**
-     * Displays a single Tipoingresoegreso model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Tipoingresoegreso model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Tipoingresoegreso();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Updates an existing Tipoingresoegreso model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
 
     /**
      * Deletes an existing Tipoingresoegreso model.

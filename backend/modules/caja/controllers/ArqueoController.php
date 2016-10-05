@@ -70,7 +70,10 @@ class ArqueoController extends Controller
     {
         // Comprobando que se haya echo el conteodiario antes de iniciar el arqueo
         $conteofinalizado = Conteodiario::find()->select(['id'])->where(['is not', 'montoapertura', null])
-            ->andWhere(['is not', 'montocierre', null])->andWhere(['is', 'arqueo_id', null])->exists();
+            ->andWhere(['is not', 'montocierre', null])
+            ->andWhere(['is', 'arqueo_id', null])
+            ->andWhere(['username' => Yii::$app->user->identity->username])
+            ->exists();
         if (!$conteofinalizado) {
             Yii::$app->getSession()->addFlash('warning', 'Realiza la apertura y cierre primero');
             return Yii::$app->getResponse()->redirect(array('caja/conteodiario/index'));

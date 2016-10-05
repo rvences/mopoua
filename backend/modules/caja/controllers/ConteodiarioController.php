@@ -10,6 +10,8 @@ use backend\modules\caja\models\Arqueo;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+
 
 /**
  * ConteodiarioController implements the CRUD actions for Conteodiario model.
@@ -28,6 +30,20 @@ class ConteodiarioController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'view' ],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' =>  ['index','view' ],
+                        'roles' => ['@'],
+                        'matchCallback' => function () {
+                            return \common\models\User::isUserCaja(Yii::$app->user->identity->id);
+                        },
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -39,16 +55,31 @@ class ConteodiarioController extends Controller
 
     public function actionIndex()
     {
-        $model = Conteodiario::findOne(['username'=> Yii::$app->user->identity->username, 'arqueo_id' => null]);
+        //$model = Conteodiario::findOne(['username'=> Yii::$app->user->identity->username, 'arqueo_id' => null]);
+        $model = Conteodiario::findOne(['arqueo_id' => null]);
+
+
+
+
+
         if ($model) {
-            if ( ($model->load(Yii::$app->request->post()) && $model->save()) || $model->montocierre ) {
+            if ($model->username != Yii::$app->user->identity->username) {
+                Yii::$app->getSession()->addFlash('danger', 'El usuario ' . $model->username .' no cerro turno, pide que lo cierre para que puedas continuar');
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
-                return $this->render('cierre', [
-                    'model' => $model,
-                    'monedas' => $this->monedas,
-                ]);
+                if ( ($model->load(Yii::$app->request->post()) && $model->save()) || $model->montocierre ) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    return $this->render('cierre', [
+                        'model' => $model,
+                        'monedas' => $this->monedas,
+                    ]);
+                }
             }
+
+
+
+
         } else {
             $model = new Conteodiario();
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -102,7 +133,7 @@ class ConteodiarioController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionNoDelete($id)
     {
         $this->findModel($id)->delete();
 
