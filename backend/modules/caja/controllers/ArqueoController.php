@@ -41,9 +41,10 @@ class ArqueoController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ArqueoSearch();
+        $searchModel = new ArqueoSearch(
+        );
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $dataProvider->sort = ['defaultOrder' => ['id' => 'DESC']];
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
