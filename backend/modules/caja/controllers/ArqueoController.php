@@ -13,6 +13,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\base\Exception;
+//use yii\helpers\ArrayHelper;
 
 /**
  * ArqueoController implements the CRUD actions for Arqueo model.
@@ -111,12 +112,14 @@ class ArqueoController extends Controller
                         }
                     }
                     if ($flag) {
+
                         // Obteniendo la info de la apertura
                         $apertura = Conteodiario::find()->select(['montoapertura', 'montocierre'])->where(['arqueo_id' => null, 'username'=> Yii::$app->user->identity->username ])->one();
                         // Cantidad que se conto de dinero con que se aperturo la caja
                         $model->efectivoapertura = $apertura->montoapertura;
                         // Cantidad que se conto de dinero con el que se cerro la caja
                         $model->efectivocierre = $apertura->montocierre;
+
                         // Ventas en efectivo reportadas por el SoftRestaurant -- Efectivo Real - Lo que dice la máquina que vendió
                         $model->efectivosistema =        Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'INGRESO EFECTIVO'])->asArray()->sum('cantidad');
                         // Compras realizadas con Tarjeta de Debido o Credito
@@ -174,13 +177,53 @@ class ArqueoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $modelsNotas = $model->conteonotas;
+        //$modelsNotas = Conteonotas::findAll(['arqueo_id' => 70]);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        //var_dump($modelsNotas->prepare(Yii::$app->db->queryBuilder)->createCommand()->rawSql); exit();
+
+        if ($model->load(Yii::$app->request->post())) {
+            Model::loadMultiple($modelsNotas, Yii::$app->request->post());
+            $valid = $model->validate();
+            $valid = Model::validateMultiple($modelsNotas) && $valid;
+            if ($valid) {
+                $transaction = Yii::$app->db->beginTransaction();
+                try {
+
+
+                    foreach ($modelsNotas as $modelNotas) {
+                        $modelNotas->arqueo_id = $model->id;
+                        if (! ($flag = $modelNotas->save(false))) {
+                            $transaction->rollBack();
+                            break;
+                        }
+                    }
+                    $this->actualizaArqueo($model);
+                    $model->save(false);
+                    /*
+                    if ($flag = $model->save(false)) {
+
+
+                    }*/
+                    if ($flag) {
+                        $transaction->commit();
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    }
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                }
+            }
+
+
+
+
+
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'modelsNotas' => $modelsNotas,
             ]);
+
         }
     }
 
@@ -233,5 +276,56 @@ class ArqueoController extends Controller
             $transaction->rollBack();
         }
         return $this->redirect(['view', 'id' => $model->id]);
+    }
+
+
+    /*
+     * Obtiene todos los valores a guardar en el arqueo
+     */
+    protected function actualizaArqueo($model) {
+
+        ## OBTIENE LA CANTIDAD CON LA QUE SE ABRIO Y CERRO EL TURNO EN LA CAJA
+        // Obteniendo la info de la apertura
+        $apertura = Conteodiario::find()->select(['montoapertura', 'montocierre'])->where(['arqueo_id' => null, 'username'=> Yii::$app->user->identity->username ])->one();
+        // Cantidad que se conto de dinero con que se aperturo la caja
+
+
+        $model->efectivoapertura = $apertura->montoapertura;
+        // Cantidad que se conto de dinero con el que se cerro la caja
+        $model->efectivocierre = $apertura->montocierre;
+
+        ## OBTIENE LAS CANTIDADES DE CADA INGRESO O EGRESO PARA HACER LOS CALCULOS
+        // Ventas en efectivo reportadas por el SoftRestaurant -- Efectivo Real - Lo que dice la máquina que vendió
+        $model->efectivosistema =        Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'INGRESO EFECTIVO'])->asArray()->sum('cantidad');
+        // Compras realizadas con Tarjeta de Debido o Credito
+        $model->dineroelectronico =      Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'INGRESO ELECTRONICO'])->asArray()->sum('cantidad');
+        // Dinero que se deposito de forma adicional ( de compras u otra cosa que se retiro y no se deposito nuevamente )
+        $model->efectivoadeudoanterior = Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'INGRESO ADEUDOS ANTERIORES'])->asArray()->sum('cantidad');
+        // Dinero que deposita la empresa para agregar flujo de efectivo ( Cuando se queda sin dinero o cambio la caja)
+        $model->depositoempresa =        Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'INGRESO EMPRESA'])->asArray()->sum('cantidad');
+        // Dinero que se retira de la caja por exceso de efectivo por seguridad
+        $model->retiroempresa =          Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'RETIRO EMPRESA'])->asArray()->sum('cantidad');
+        // Compras realizadas con dinero de la caja
+        $model->egresocompras =          Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'EGRESO COMPRA'])->asArray()->sum('cantidad');
+        // Pagos de servicios con dinero de la caja
+        $model->egresocomprasservicio =  Conteonotas::find()->select(['cantidad'])->where(['arqueo_id'=> $model->id, 'tipo' => 'EGRESO SERVICIO'])->asArray()->sum('cantidad');
+
+        // Efectivo que debe de existir en la caja; debe ser igual a lo que reporto el SoftRestaurant
+        $model->efectivofisico =       $model->efectivoapertura + $model->efectivosistema + $model->depositoempresa //+ $model->efectivoadeudoanterior
+                                     - $model->egresocompras - $model->egresocomprasservicio - $model->retiroempresa;
+        $adeudoanterior = 		 Arqueo::find()->select(['adeudoactual'])->where(['username'=> Yii::$app->user->identity->username , 'cerrado' => true])->orderBy(['id' => SORT_ASC])->one();
+        // Cuanto quedo a deber el cajero el día anterior
+        $model->adeudoanterior = (empty($adeudoanterior->adeudoactual)) ? 0 : $adeudoanterior->adeudoactual;
+        // Dinero que quedo a deber el cajero
+
+        if ($model->efectivocierre < $model->efectivofisico ) { $deuda = $model->efectivofisico - $model->efectivocierre ;} else { $deuda = 0;}
+        $model->adeudoactual =      $deuda + 	  $model->adeudoanterior -  $model->efectivoadeudoanterior;
+
+        // Cuanto se vendio en el turno
+        $model->ventaturno =         	 $model->efectivosistema + $model->dineroelectronico;
+        // Cuando se gasto en el turno
+        $model->egresoturno =        	 $model->egresocompras + $model->egresocomprasservicio;
+
+
     }
 }

@@ -47,6 +47,7 @@ AppAsset::register($this);
                 ['label' => 'Arqueo', 'url'=> ['/caja/arqueo/create'], 'visible' => \common\models\User::isUserCaja(Yii::$app->user->identity->id)],
                 ['label' => 'Caja - Catálogos' , 'items' =>array(
                     ['label' => 'Insumos', 'url'=> ['/caja/tipoingresoegreso']],
+                    ['label' => 'Arqueo todos', 'url'=> ['/caja/arqueo/index']],
                 ), 'visible' => \common\models\User::isUserAdmin(Yii::$app->user->identity->id)],
             )],
             [

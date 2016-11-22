@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Modificar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Finalizar el turno', ['cerrar', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -36,34 +36,71 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <div class="row">
-        <div class="col-sm-12">
-            El sistema reporto una venta en efectivo de $<?= $model->efectivosistema ?> y de $<?= $model->dineroelectronico ?> con tarjetas o créditos
-        </div>
+        <div class="col-sm-3">Efectivo Caja en Apertura (+)</div><div class="col-sm-3">$ <?= $model->efectivoapertura ?></div>
     </div>
 
+    <?php if ( ($model->egresocomprasservicio + $model->egresocompras) > 0 )  { ?>
     <div class="row">
-        <div class="col-sm-4">
-            Compras o pagos realizados en efectivo: $<?= intval($model->egresocompras) + intval($model->egresocomprasservicio) ?>
-        </div>
-        <div class="col-sm-4">
-            Retiro de Excedente en caja fue de: $<?= $model->retiroempresa ?>
-        </div>
-        <div class="col-sm-4">
-            Depósitos por falta de efectivo fue de: $<?= $model->depositoempresa ?>
-        </div>
+        <div class="col-sm-3">Compras (-)</div><div class="col-sm-3">$ <?= $model->egresocomprasservicio + $model->egresocompras ?></div>
     </div>
+    <?php } ?>
+
+    <?php if ( ($model->retiroempresa) > 0 )  { ?>
+        <div class="row">
+            <div class="col-sm-3">Retiro de Excedente (-)</div><div class="col-sm-3">$ <?= $model->retiroempresa ?></div>
+        </div>
+    <?php } ?>
+
+    <?php if ( ($model->depositoempresa) > 0 )  { ?>
+        <div class="row">
+            <div class="col-sm-3">Depósito por falta de efectivo (+)</div><div class="col-sm-3">$ <?= $model->depositoempresa ?></div>
+        </div>
+    <?php } ?>
+
+    <?php if ( ($model->efectivosistema) > 0 )  { ?>
+        <div class="row">
+            <div class="col-sm-3">Ventas en efectivo reportadas por SoftRestaurant (+)</div><div class="col-sm-3">$ <?= $model->efectivosistema ?></div>
+        </div>
+    <?php } ?>
+
+    <?php if ( ($model->dineroelectronico) > 0 )  { ?>
+        <div class="row">
+            <div class="col-sm-3">Ventas con Tarjetas o Firmas (+)</div><div class="col-sm-3">$ <?= $model->dineroelectronico ?></div>
+        </div>
+    <?php } ?>
 
     <div class="row">
-        <div class="col-sm-12">
-            El turno se abrió con $<?= $model->efectivoapertura ?> y cerro con $<?= $model->efectivocierre ?> en efectivo, y debió cerrar con: $<?=$model->efectivofisico ?>
-        </div>
+
+        <?php $total = $model->efectivoapertura - $model->egresocomprasservicio - $model->egresocompras - $model->retiroempresa
+            + $model->depositoempresa + $model->efectivosistema;?>
+        <div class="col-sm-3">El sistema indica que se debe cerrar en efectivo con:(=)</div><div class="col-sm-3">$ <?= money_format('%i', $total); if ($model->efectivoadeudoanterior > 0 ) {  ?> , de los cuales <?=$model->efectivoadeudoanterior ?> son para saldar la deuda anterior<?php } ?></div>
     </div>
 
-    <div class="row">
+    <?php if ($total > $model->efectivocierre) { ?>
+        <div class="row alert-danger">
+            <div class="col-sm-3">Favor de rectificar </div><div class="col-sm-3">$ <?= money_format('%i', $total - $model->efectivocierre); ?> Le debes a PKory, si continua la deuda da clic en Modificar y justificalo en la información relevante</div>
+        </div>
+    <?php } ?>
+
+    <?php if ($total < $model->efectivocierre) { ?>
+        <div class="row alert-warning">
+            <div class="col-sm-3">Favor de rectificar </div><div class="col-sm-3">$ <?= money_format('%i', $total - $model->efectivocierre); ?> Revisa las notas que no incluiste, si continua la deuda da clic en Modificar y justificalo en la información relevante </div>
+        </div>
+    <?php } ?>
+
+
+    <?php if ( ($model->efectivocierre) > 0 )  { ?>
+        <div class="row">
+            <div class="col-sm-3">Efectivo que contaste al cerrar la caja fue de:</div><div class="col-sm-3">$ <?= $model->efectivocierre ?></div>
+        </div>
+    <?php } ?>
+
+    <div class="row alert-danger">
         <div class="col-sm-12">
             El adeudo anterior <?= $model->adeudoanterior ?> sumado con el adeudo actual <?= $model->adeudoactual - $model->adeudoanterior?> al cierre del día es de <b>$<?= $model->adeudoactual    ?></b>
         </div>
     </div>
+
 <?php /*
 
     <?= DetailView::widget([
