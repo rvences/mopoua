@@ -48,6 +48,16 @@ class User extends ActiveRecord implements IdentityInterface
 
     }
 
+    public static function isUserCocina($id)
+    {
+        if (User::findOne(['id' => $id, 'status' => '10', 'role' => ['COCINERO', 'SOUS CHEF', 'ADMIN']])){
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
 
     /**
      * @inheritdoc

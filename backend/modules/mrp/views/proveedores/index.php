@@ -1,7 +1,4 @@
 <?php
-
-
-
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use kartik\growl;

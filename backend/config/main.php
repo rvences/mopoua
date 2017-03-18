@@ -19,6 +19,9 @@ return [
         'caja' => [
             'class' => 'backend\modules\caja\Caja',
         ],
+        'nomina' => [
+            'class' => 'backend\modules\nomina\Nomina',
+        ],
         'gridview' =>  [
             'class' => '\kartik\grid\Module'
         ],

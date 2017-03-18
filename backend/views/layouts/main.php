@@ -41,26 +41,35 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
         $menuItems = [
+            (\common\models\User::isUserCaja(Yii::$app->user->identity->id) ) ?
             [
                 'label' => 'Caja', 'items' =>array(
-                ['label' => 'Apertura / Cierre', 'url'=> ['/caja/conteodiario/index'], 'visible' => \common\models\User::isUserCaja(Yii::$app->user->identity->id)],
-                ['label' => 'Arqueo', 'url'=> ['/caja/arqueo/create'], 'visible' => \common\models\User::isUserCaja(Yii::$app->user->identity->id)],
-                ['label' => 'Caja - Catálogos' , 'items' =>array(
-                    ['label' => 'Insumos', 'url'=> ['/caja/tipoingresoegreso']],
-                    ['label' => 'Arqueo todos', 'url'=> ['/caja/arqueo/index']],
-                ), 'visible' => \common\models\User::isUserAdmin(Yii::$app->user->identity->id)],
-            )],
+                    ['label' => 'Apertura / Cierre', 'url'=> ['/caja/conteodiario/index'], 'visible' => \common\models\User::isUserCaja(Yii::$app->user->identity->id)],
+                    ['label' => 'Arqueo', 'url'=> ['/caja/arqueo/create'], 'visible' => \common\models\User::isUserCaja(Yii::$app->user->identity->id)],
+                    ['label' => 'Caja - Catálogos' , 'items' =>array(
+                        ['label' => 'Insumos', 'url'=> ['/caja/tipoingresoegreso']],
+                        ['label' => 'Arqueo todos', 'url'=> ['/caja/arqueo/index']],
+                    ), 'visible' => \common\models\User::isUserAdmin(Yii::$app->user->identity->id)],
+            )] : '',
+
+            (\common\models\User::isUserCocina(Yii::$app->user->identity->id) ) ?
             [
                 'label' => 'MRP - Catálogos', 'items' =>array(
-                ['label' => 'Insumos', 'url'=> ['/mrp/insumo']],
-                ['label' => 'Tipo de Proveedores', 'url'=> ['/mrp/tipoproveedores']],
-                ['label' => 'Proveedores', 'url'=> ['/mrp/proveedores']],
-                ['label' => 'Clave Presupuestal', 'url'=> ['/mrp/clavepresupuestal']],
-                ['label' => 'Unidad de Medida', 'url'=> ['/mrp/unidadmedida']],
+                    ['label' => 'Insumos', 'url'=> ['/mrp/insumo']],
 
 
+                    ['label' => 'Catálogos' , 'items' =>array(
+                        ['label' => 'Tipo de Proveedores', 'url'=> ['/mrp/tipoproveedores']],
+                        ['label' => 'Proveedores', 'url'=> ['/mrp/proveedores']],
+                        ['label' => 'Clave Presupuestal', 'url'=> ['/mrp/clavepresupuestal']],
+                        ['label' => 'Unidad de Medida', 'url'=> ['/mrp/unidadmedida']],
+                    ), 'visible' => \common\models\User::isUserAdmin(Yii::$app->user->identity->id)],
+            )] : '',
+
+            [
+                'label' => 'Nomina', 'items' =>array(
+                ['label' => 'Colaboradores', 'url'=> ['/nomina/colaboradores']],
             ), 'visible' => \common\models\User::isUserAdmin(Yii::$app->user->identity->id)],
-
             ['label' => 'Personal', 'items'=> array(
                 ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
                     'url' => ['/site/logout'],
