@@ -4,12 +4,12 @@ namespace backend\modules\nomina\models\search;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\modules\nomina\models\Colaboradores;
+use backend\modules\nomina\models\Nompercepciondeduccion;
 
 /**
- * ColaboradoresSearch represents the model behind the search form about `backend\modules\nomina\models\Colaboradores`.
+ * NompercepciondeduccionSearch represents the model behind the search form about `backend\modules\nomina\models\Nompercepciondeduccion`.
  */
-class ColaboradoresSearch extends Colaboradores
+class NompercepciondeduccionSearch extends Nompercepciondeduccion
 {
     /**
      * @inheritdoc
@@ -18,7 +18,8 @@ class ColaboradoresSearch extends Colaboradores
     {
         return [
             [['id', 'puesto_id'], 'integer'],
-            [['clave', 'nombre', 'apaterno', 'amaterno', 'rfc', 'curp', 'nss', 'fingreso', 'fbaja'], 'safe'],
+            [['clave_tipopd', 'created', 'updated'], 'safe'],
+            [['monto'], 'number'],
         ];
     }
 
@@ -40,7 +41,7 @@ class ColaboradoresSearch extends Colaboradores
      */
     public function search($params)
     {
-        $query = Colaboradores::find();
+        $query = Nompercepciondeduccion::find();
 
         // add conditions that should always apply here
 
@@ -60,18 +61,12 @@ class ColaboradoresSearch extends Colaboradores
         $query->andFilterWhere([
             'id' => $this->id,
             'puesto_id' => $this->puesto_id,
-            'fingreso' => $this->fingreso,
-            'fbaja' => $this->fbaja,
+            'monto' => $this->monto,
+            'created' => $this->created,
+            'updated' => $this->updated,
         ]);
 
-        $query->andFilterWhere(['like', 'clave', $this->clave])
-            ->andFilterWhere(['like', 'nombre', $this->nombre])
-            ->andFilterWhere(['like', 'apaterno', $this->apaterno])
-            ->andFilterWhere(['like', 'amaterno', $this->amaterno])
-            ->andFilterWhere(['like', 'rfc', $this->rfc])
-            ->andFilterWhere(['like', 'curp', $this->curp])
-            ->andFilterWhere(['like', 'nss', $this->nss])
-            ;
+        $query->andFilterWhere(['like', 'clave_tipopd', $this->clave_tipopd]);
 
         return $dataProvider;
     }

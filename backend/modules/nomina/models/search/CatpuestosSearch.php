@@ -4,12 +4,12 @@ namespace backend\modules\nomina\models\search;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\modules\nomina\models\Colaboradores;
+use backend\modules\nomina\models\Catpuestos;
 
 /**
- * ColaboradoresSearch represents the model behind the search form about `backend\modules\nomina\models\Colaboradores`.
+ * CatpuestosSearch represents the model behind the search form about `backend\modules\nomina\models\Catpuestos`.
  */
-class ColaboradoresSearch extends Colaboradores
+class CatpuestosSearch extends Catpuestos
 {
     /**
      * @inheritdoc
@@ -17,8 +17,8 @@ class ColaboradoresSearch extends Colaboradores
     public function rules()
     {
         return [
-            [['id', 'puesto_id'], 'integer'],
-            [['clave', 'nombre', 'apaterno', 'amaterno', 'rfc', 'curp', 'nss', 'fingreso', 'fbaja'], 'safe'],
+            [['id'], 'integer'],
+            [['puesto', 'requisitos', 'funciones', 'habilidades', 'conocimientos'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class ColaboradoresSearch extends Colaboradores
      */
     public function search($params)
     {
-        $query = Colaboradores::find();
+        $query = Catpuestos::find();
 
         // add conditions that should always apply here
 
@@ -59,19 +59,13 @@ class ColaboradoresSearch extends Colaboradores
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'puesto_id' => $this->puesto_id,
-            'fingreso' => $this->fingreso,
-            'fbaja' => $this->fbaja,
         ]);
 
-        $query->andFilterWhere(['like', 'clave', $this->clave])
-            ->andFilterWhere(['like', 'nombre', $this->nombre])
-            ->andFilterWhere(['like', 'apaterno', $this->apaterno])
-            ->andFilterWhere(['like', 'amaterno', $this->amaterno])
-            ->andFilterWhere(['like', 'rfc', $this->rfc])
-            ->andFilterWhere(['like', 'curp', $this->curp])
-            ->andFilterWhere(['like', 'nss', $this->nss])
-            ;
+        $query->andFilterWhere(['like', 'puesto', $this->puesto])
+            ->andFilterWhere(['like', 'requisitos', $this->requisitos])
+            ->andFilterWhere(['like', 'funciones', $this->funciones])
+            ->andFilterWhere(['like', 'habilidades', $this->habilidades])
+            ->andFilterWhere(['like', 'conocimientos', $this->conocimientos]);
 
         return $dataProvider;
     }

@@ -68,9 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'rfc',
             // 'curp',
             // 'nss',
-            // 'puesto',
-            // 'tipo',
-            // 'tabulador',
+            // 'puesto_id',
             // 'fingreso',
             // 'fbaja',
 

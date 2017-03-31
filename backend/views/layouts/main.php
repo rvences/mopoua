@@ -66,10 +66,18 @@ AppAsset::register($this);
                     ), 'visible' => \common\models\User::isUserAdmin(Yii::$app->user->identity->id)],
             )] : '',
 
-            [
-                'label' => 'Nomina', 'items' =>array(
-                ['label' => 'Colaboradores', 'url'=> ['/nomina/colaboradores']],
-            ), 'visible' => \common\models\User::isUserAdmin(Yii::$app->user->identity->id)],
+            (\common\models\User::isUserAdmin(Yii::$app->user->identity->id) ) ?
+                [
+                    'label' => 'Nomina', 'items' =>array(
+                        ['label' => 'Colaboradores', 'url'=> ['/nomina/colaboradores']],
+
+
+                    ['label' => 'Catálogos' , 'items' =>array(
+                        ['label' => 'Catálogo de Puestos', 'url'=> ['/nomina/catpuestos']],
+                        ['label' => 'Catálogo de Percepcion y Deduccion', 'url'=> ['/nomina/cattipopd']],
+                    ), ],
+                )] : '',
+
             ['label' => 'Personal', 'items'=> array(
                 ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
                     'url' => ['/site/logout'],

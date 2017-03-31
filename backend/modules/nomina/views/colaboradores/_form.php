@@ -21,7 +21,7 @@ use kartik\widgets\ActiveForm;
         ]); ?>
 
         <div class="col-sm-2">
-            <?= $form->field($model, 'clave',['showLabels'=>false])->textInput(['placeholder'=>'Clave del Usuario']); ?>
+            <?= $form->field($model, 'clave',['showLabels'=>false])->textInput(['placeholder'=>'Clave del Biométrico']); ?>
         </div>
 
         <div class="col-sm-3">
@@ -49,15 +49,9 @@ use kartik\widgets\ActiveForm;
         </div>
 
         <div class="col-sm-3">
-            <?= $form->field($model, 'puesto',['showLabels'=>false])->textInput(['placeholder'=>'Puesto']); ?>
-        </div>
-
-        <div class="col-sm-3">
-            <?= $form->field($model, 'tipo',['showLabels'=>false])->textInput(['placeholder'=>'Tipo']); ?>
-        </div>
-
-        <div class="col-sm-3">
-            <?= $form->field($model, 'tabulador',['showLabels'=>false])->textInput(['placeholder'=>'Tabulador']); ?>
+            <?php
+            $dato = \yii\helpers\ArrayHelper::map(\backend\modules\nomina\models\Catpuestos::find()->asArray()->all(), 'id', 'puesto');
+            echo $form->field($model, 'puesto_id',['showLabels'=>false])->dropDownList($dato); ?>
         </div>
 
         <div class="col-sm-3">

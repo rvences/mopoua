@@ -22,10 +22,11 @@
         "kartik-v/yii2-editable": "@dev",
         "kartik-v/yii2-widget-growl": "*",
         "kartik-v/yii2-widgets": "@dev",
-        "wbraganca/yii2-dynamicform": "*"
+        "wbraganca/yii2-dynamicform": "*",
+        "johnitvn/yii2-ajaxcrud": "*"
     },
     "require-dev": {
-        "yiisoft/yii2-codeception": "*",
+        "codeception/codeception": "*",
         "yiisoft/yii2-debug": "*",
         "yiisoft/yii2-gii": "*",
         "yiisoft/yii2-faker": "*"

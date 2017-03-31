@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model backend\modules\nomina\models\Colaboradores */
+/* @var $model backend\modules\nomina\models\Nompercepciondeduccion */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Colaboradores', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Nompercepciondeduccions', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="colaboradores-view">
+<div class="nompercepciondeduccion-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,16 +29,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'clave',
-            'nombre',
-            'apaterno',
-            'amaterno',
-            'rfc',
-            'curp',
-            'nss',
             'puesto_id',
-            'fingreso',
-            'fbaja',
+            'clave_tipopd',
+            'monto',
+            'created',
+            'updated',
         ],
     ]) ?>
 
