@@ -36,7 +36,6 @@ class Catpuestos extends \yii\db\ActiveRecord
             [['puesto'], 'required'],
             [['puesto', 'tipo_colaborador', 'plazas'], 'required'],
             [['requisitos', 'funciones', 'habilidades', 'conocimientos'], 'string'],
-            [['puesto'], 'string', 'max' => 10],
             [['puesto'], 'unique'],
             [['plazas'], 'integer'],
             [['puesto'], 'string', 'max' => 50],
