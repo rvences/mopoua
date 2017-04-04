@@ -65,8 +65,8 @@ class Colaboradores extends \yii\db\ActiveRecord
             'curp' => 'Curp',
             'nss' => 'Nss',
             'puesto_id' => 'Puesto',
-            'fingreso' => 'Fingreso',
-            'fbaja' => 'Fbaja',
+            'fingreso' => 'Ingreso',
+            'fbaja' => 'Baja',
         ];
     }
 

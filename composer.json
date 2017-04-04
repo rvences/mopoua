@@ -21,6 +21,7 @@
         "kartik-v/yii2-grid": "@dev",
         "kartik-v/yii2-editable": "@dev",
         "kartik-v/yii2-widget-growl": "*",
+        "kartik-v/yii2-datecontrol": "dev-master",
         "kartik-v/yii2-widgets": "@dev",
         "wbraganca/yii2-dynamicform": "*",
         "johnitvn/yii2-ajaxcrud": "*"
