@@ -13,11 +13,11 @@ use yii\grid\GridView;
 
     foreach ($dataProvider->models as $model) {
 
-        if ( $model->clave_tipopd == 'P001') {
+        if ( $model->clave_tipopd == 'P001') { // Salario Base
             $salario_neto += $model->monto * 15.2;
-        } elseif ( $model->clave_tipopd == 'P005') {
+        } elseif ( $model->clave_tipopd == 'P004') { // Incorporación voluntaria IMSS
             $salario_neto += $model->monto * 15.2;
-        } elseif ( $model->clave_tipopd == 'P002') {
+        } elseif ( $model->clave_tipopd == 'P002') { // Servicio de Comedor
             $salario_bruto += $model->monto * 15.2;
         } else {
             $salario_bruto += $model->monto;
