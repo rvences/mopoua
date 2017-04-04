@@ -25,7 +25,7 @@ use yii\grid\GridView;
         //echo "addMarker({$model->clave_tipopd}, {$model->monto});";
     }
     $salario_bruto += $salario_neto;
-    echo "Salario Bruto: " . $salario_bruto . ' --- ' . 'Salario Neto: ' . $salario_neto;
+    echo "Salario Bruto: $" . $salario_bruto . ' --- ' . 'Salario Neto: $' . $salario_neto;
 
     ?>
 
