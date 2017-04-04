@@ -33,14 +33,14 @@ class Catpuestos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['puesto'], 'required'],
+            //[['puesto'], 'required'],
             [['puesto', 'tipo_colaborador', 'plazas'], 'required'],
             [['requisitos', 'funciones', 'habilidades', 'conocimientos'], 'string'],
-            [['puesto'], 'unique'],
+            //[['puesto', 'tipo_colaborador'], 'unique'],
             [['plazas'], 'integer'],
             [['puesto'], 'string', 'max' => 50],
             [['tipo_colaborador'], 'string', 'max' => 20],
-            [['puesto', 'tipo_colaborador'], 'unique', 'targetAttribute' => ['puesto', 'tipo_colaborador'], 'message' => 'The combination of Puesto and Tipo Colaborador has already been taken.'],
+            [['puesto', 'tipo_colaborador'], 'unique', 'targetAttribute' => ['puesto', 'tipo_colaborador'], 'message' => 'Ya existe la combinación de Puesto y Tipo de Colaborador.'],
         ];
     }
 
