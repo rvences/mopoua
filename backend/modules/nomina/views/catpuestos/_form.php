@@ -92,7 +92,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
                 <?php foreach ($modelstipopd as $i => $modeltipopd): ?>
                     <div class="item panel panel-default"><!-- widgetBody -->
                         <div class="panel-heading">
-                            <h3 class="panel-title pull-left">Ingresos / Egresos</h3>
+                            <h3 class="panel-title pull-left">Ingresos / Egresos por Día</h3>
                             <div class="pull-right">
                                 <button type="button" class="add-item btn btn-success btn-xs"><i class="glyphicon glyphicon-plus"></i></button>
                                 <button type="button" class="remove-item btn btn-danger btn-xs"><i class="glyphicon glyphicon-minus"></i></button>

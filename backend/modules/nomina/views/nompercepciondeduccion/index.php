@@ -44,7 +44,7 @@ use yii\grid\GridView;
             ],
             [
                 'attribute' => 'concepto',
-                'label' => 'Concepto',
+                'label' => 'Concepto por Día',
                 'class' => 'yii\grid\DataColumn', // can be omitted, as it is the default
 
                 'value' => function ($data) {
