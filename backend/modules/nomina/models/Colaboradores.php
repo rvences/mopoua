@@ -80,4 +80,12 @@ class Colaboradores extends \yii\db\ActiveRecord
         }
         return false;
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPuesto()
+    {
+        return $this->hasOne(Catpuestos::className(), ['id' => 'puesto_id']);
+    }
 }

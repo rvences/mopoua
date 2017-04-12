@@ -61,7 +61,13 @@ use kartik\widgets\ActiveForm;
 
         <div class="col-sm-2">
             <?php
-            $dato = \yii\helpers\ArrayHelper::map(\backend\modules\nomina\models\Catpuestos::find()->asArray()->orderBy('puesto')->all(), 'id', 'puesto');
+            $dato = \yii\helpers\ArrayHelper::map(\backend\modules\nomina\models\Catpuestos::find()->asArray()->orderBy('puesto')->all(), 'id',
+
+                function($model, $defaultValue) {
+                    return $model['tipo_colaborador'].' '.$model['puesto'];
+                }
+                //'puesto'
+            );
             echo $form->field($model, 'puesto_id',['showLabels'=>false])->dropDownList($dato, ['prompt'=>'[Seleccionar]']); ?>
         </div>
 

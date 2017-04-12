@@ -62,13 +62,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'width'=>'105px',
             ],
             'clave',
+            [                                                  // the owner name of the model
+                'label' => 'Puesto',
+                'value'=>function ($model) {
+                    return $model->puesto->tipo_colaborador . ' ' . $model->puesto->puesto;
+                },
+            ],
             'nombre',
             'apaterno',
             'amaterno',
             // 'rfc',
             // 'curp',
             // 'nss',
-            // 'puesto_id',
+            //'puesto_id',
             // 'fingreso',
             // 'fbaja',
 
