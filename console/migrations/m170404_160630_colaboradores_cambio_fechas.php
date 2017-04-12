@@ -16,7 +16,7 @@ class m170404_160630_colaboradores_cambio_fechas extends Migration
     {
         $this->alterColumn('colaboradores', 'fingreso', $this->dateTime());
         $this->alterColumn('colaboradores', 'fbaja', $this->dateTime());
-        $this->createIndex('rfc', 'colaboradores', 'rfc', $unique = true );
+        //$this->createIndex('rfc', 'colaboradores', 'rfc', $unique = true );
 
         return true;
     }
