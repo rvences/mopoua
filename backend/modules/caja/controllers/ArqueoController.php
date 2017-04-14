@@ -58,8 +58,17 @@ class ArqueoController extends Controller
      */
     public function actionView($id)
     {
+        //$todos = $this->cuentaNotas();
+        //$todos = Conteonotas::findBySql('SELECT * FROM conteonotas WHERE arqueo_id=53')->all();
+        //$todos = Conteonotas::findAll(['arqueo_id' => 53]);
+        $detalle = Conteonotas::find()->where(['arqueo_id' => $id])->andWhere(['>', 'cantidad', 0])->orderBy(['tipo' => SORT_DESC])->all();
+
+        $monedas = Conteodiario::findOne(['arqueo_id' => $id]);
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'detalle' => $detalle,
+            'monedas' => $monedas,
         ]);
     }
 
@@ -289,7 +298,6 @@ class ArqueoController extends Controller
         // Obteniendo la info de la apertura
         $apertura = Conteodiario::find()->select(['montoapertura', 'montocierre'])->where(['arqueo_id' => null, 'username'=> Yii::$app->user->identity->username ])->one();
         // Cantidad que se conto de dinero con que se aperturo la caja
-
 
         $model->efectivoapertura = $apertura->montoapertura;
         // Cantidad que se conto de dinero con el que se cerro la caja

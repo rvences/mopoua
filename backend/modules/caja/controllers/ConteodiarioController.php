@@ -53,14 +53,19 @@ class ConteodiarioController extends Controller
         ];
     }
 
+    public function actionContar()
+    {
+        return $this->render('conteo', [
+            'model' => new Conteodiario(),
+            'monedas' => $this->monedas,
+        ]);
+
+    }
+
     public function actionIndex()
     {
         //$model = Conteodiario::findOne(['username'=> Yii::$app->user->identity->username, 'arqueo_id' => null]);
         $model = Conteodiario::findOne(['arqueo_id' => null]);
-
-
-
-
 
         if ($model) {
             if ($model->username != Yii::$app->user->identity->username) {
@@ -76,9 +81,6 @@ class ConteodiarioController extends Controller
                     ]);
                 }
             }
-
-
-
 
         } else {
             $model = new Conteodiario();
