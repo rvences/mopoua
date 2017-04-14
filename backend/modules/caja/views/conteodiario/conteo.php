@@ -9,7 +9,6 @@ use kartik\form\ActiveForm;
 /* @var $model backend\modules\caja\models\Conteodiario */
 
 $this->title = 'Conteo Efectivo Rápido';
-$this->params['breadcrumbs'][] = ['label' => 'Apertura', 'url' => ['create']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="conteodiario-create">
