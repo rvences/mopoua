@@ -63,7 +63,11 @@ class ArqueoController extends Controller
         //$todos = Conteonotas::findAll(['arqueo_id' => 53]);
         $detalle = Conteonotas::find()->where(['arqueo_id' => $id])->andWhere(['>', 'cantidad', 0])->orderBy(['tipo' => SORT_DESC])->all();
 
-        $monedas = Conteodiario::findOne(['arqueo_id' => $id]);
+        //$monedas = Conteodiario::findOne(['arqueo_id' => NULL]);
+
+        $monedas = Conteodiario::find()->where(['arqueo_id' => NULL])->orWhere(['arqueo_id' => $id])->one();
+
+
 
         return $this->render('view', [
             'model' => $this->findModel($id),
