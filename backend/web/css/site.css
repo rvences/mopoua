@@ -1,3 +1,7 @@
+.table > tbody > tr.atrasado > td{
+    background-color: #ffcb4f;
+}
+
 .fondo {
     background-color: #f0f0f0;
 }

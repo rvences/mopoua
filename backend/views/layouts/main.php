@@ -41,6 +41,12 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
         $menuItems = [
+            ['label' => 'Tareas', 'url'=> ['/productividad/tareas/index']],
+
+
+
+
+
             ['label' => 'Conteo Efectivo', 'url'=> ['/caja/conteodiario/contar']],
             (\common\models\User::isUserCaja(Yii::$app->user->identity->id) ) ?
             [

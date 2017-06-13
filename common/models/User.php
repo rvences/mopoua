@@ -28,9 +28,13 @@ class User extends ActiveRecord implements IdentityInterface
 
     public $role;
 
+    public static function listUserActive() {
+        return User::find()->where(['status' => self::STATUS_ACTIVE])->orderBy('username')->all();
+    }
+
     public static function isUserAdmin($id)
     {
-        if (User::findOne(['id' => $id, 'status' => '10', 'role' => 'ADMIN'])){
+        if (User::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE, 'role' => 'ADMIN'])){
             return true;
         } else {
             return false;
@@ -40,7 +44,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function isUserCaja($id)
     {
-        if (User::findOne(['id' => $id, 'status' => '10', 'role' => ['CAJA', 'ADMIN']])){
+        if (User::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE, 'role' => ['CAJA', 'ADMIN']])){
             return true;
         } else {
             return false;
@@ -50,7 +54,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function isUserCocina($id)
     {
-        if (User::findOne(['id' => $id, 'status' => '10', 'role' => ['COCINERO', 'SOUS CHEF', 'ADMIN']])){
+        if (User::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE, 'role' => ['COCINERO', 'SOUS CHEF', 'ADMIN']])){
             return true;
         } else {
             return false;

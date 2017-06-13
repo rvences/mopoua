@@ -19,14 +19,28 @@ return [
         'caja' => [
             'class' => 'backend\modules\caja\Caja',
         ],
+        'productividad' => [
+            'class' => 'backend\modules\productividad\Productividad',
+        ],
         'nomina' => [
             'class' => 'backend\modules\nomina\Nomina',
         ],
         'gridview' =>  [
             'class' => '\kartik\grid\Module'
         ],
+
         'datecontrol' =>  [
             'class' => '\kartik\datecontrol\Module',
+            'autoWidget' => true,
+            'autoWidgetSettings' => [
+                'date' => [
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'todayHighlight' => true,
+                        'todayBtn' => true,
+                    ],
+                ],
+            ],
             // format settings for displaying each date attribute (ICU format example)
             'displaySettings' => [
                 // \kartik\datecontrol\Module::FORMAT_DATE => 'dd.MM.yyyy',
