@@ -12,8 +12,9 @@ namespace backend\modules\nomina\models;
  * @property string $habilidades
  * @property string $conocimientos
  * @property string $tipo_colaborador
- * @property integer $plazas
+ * @property integer $area_id
  *
+ * @property Catareapuesto $area
  * @property Colaboradores[] $colaboradores
  * @property Nompercepciondeduccion[] $nompercepciondeduccions
  */
@@ -33,14 +34,13 @@ class Catpuestos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            //[['puesto'], 'required'],
             [['puesto', 'tipo_colaborador', 'plazas'], 'required'],
             [['requisitos', 'funciones', 'habilidades', 'conocimientos'], 'string'],
-            //[['puesto', 'tipo_colaborador'], 'unique'],
-            [['plazas'], 'integer'],
+            [['plazas', 'area_id'], 'integer'],
             [['puesto'], 'string', 'max' => 50],
             [['tipo_colaborador'], 'string', 'max' => 20],
             [['puesto', 'tipo_colaborador'], 'unique', 'targetAttribute' => ['puesto', 'tipo_colaborador'], 'message' => 'Ya existe la combinación de Puesto y Tipo de Colaborador.'],
+            [['area_id'], 'exist', 'skipOnError' => true, 'targetClass' => Catareapuesto::className(), 'targetAttribute' => ['area_id' => 'id']],
         ];
     }
 
@@ -58,7 +58,16 @@ class Catpuestos extends \yii\db\ActiveRecord
             'conocimientos' => 'Conocimientos',
             'tipo_colaborador' => 'Tipo Colaborador',
             'plazas' => 'Plazas disponibles',
+            'area_id' => 'Area Asignado',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getArea()
+    {
+        return $this->hasOne(Catareapuesto::className(), ['id' => 'area_id']);
     }
 
     /**

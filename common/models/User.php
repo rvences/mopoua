@@ -1,6 +1,7 @@
 <?php
 namespace common\models;
 
+use backend\modules\nomina\models\Colaboradores;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -19,6 +20,7 @@ use yii\web\IdentityInterface;
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
+ * @property integer $colaborador_id
  * @property string $password write-only password
  */
 class User extends ActiveRecord implements IdentityInterface
@@ -27,6 +29,14 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_ACTIVE = 10;
 
     public $role;
+
+    public static function isUserActive($id) {
+        if (User::findOne(['id' => $id, 'status' => '10'])){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public static function listUserActive() {
         return User::find()->where(['status' => self::STATUS_ACTIVE])->orderBy('username')->all();
@@ -221,5 +231,13 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getColaborador()
+    {
+        return $this->hasOne(Colaboradores::className(), ['id' => 'colaborador_id']);
     }
 }

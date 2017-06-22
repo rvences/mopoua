@@ -1,14 +1,15 @@
 <?php
 
 namespace backend\modules\productividad\controllers;
-
 use backend\modules\productividad\models\Prodcatalogos;
+use common\models\User;
 use Yii;
 use backend\modules\productividad\models\Tareas;
 use backend\modules\productividad\models\search\TareasSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * TareasController implements the CRUD actions for Tareas model.
@@ -16,11 +17,36 @@ use yii\filters\VerbFilter;
 class TareasController extends Controller
 {
     public $identificador;
+
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                // Acciones para el Controlador
+                'only' => ['index', 'view', 'create', 'delete', 'update'],
+                'rules' => [
+                    [
+                        // Establece que tiene permisos los vendedores
+                        'allow' => true,
+                        // El usuario se le asignan permisos en las siguientes acciones
+                        'actions' => ['index', 'view', 'create', 'delete', 'update'],
+                        // Todos los usuarios autenticados
+                        'roles' => ['@'],
+                        //Este método nos permite crear un filtro sobre la identidad del usuario
+                        //y así establecer si tiene permisos o no
+                        'matchCallback' => function () {
+                            //Llamada al método que comprueba si es un vendedor
+                            return \common\models\User::isUserActive(Yii::$app->user->identity->id);
+                        },
+                    ],
+                ],
+            ],
+        ];
+
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -40,6 +66,7 @@ class TareasController extends Controller
         $searchModel = new TareasSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+
         if (isset($_GET['historia'])) {
             switch ($_GET['historia']) {
                 case 'semana':
@@ -58,10 +85,27 @@ class TareasController extends Controller
             }
 
         } else {
-            $dataProvider->query->where('estado_id <> ' . Prodcatalogos::getEstadoFinalizado());
+            $dataProvider->query->andWhere('estado_id <> ' . Prodcatalogos::getEstadoFinalizado());
         }
 
-//        $dataProvider->query->where('estado <> ' . Prodcatalogos::getEstadoFinalizado());
+        if (isset($_GET['area'])) {
+            (Tareas::getAreaLaboral() > 0) ?
+            $dataProvider = $searchModel->searchComplete(Yii::$app->request->queryParams)
+            :
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            //$dataProvider->query->where()->
+
+
+            // select cp.area_id, t.id, t.asignado_id, t.tarea, c.nombre, c.puesto_id from tareas as t join colaboradores as c on t.asignado_id = c.id join catpuestos as cp on cp.id = c.puesto_id where area_id=2;
+
+
+
+        } else {
+            $dataProvider->query->andFilterWhere(['or',
+                ['asignado_id'=> Yii::$app->user->identity->colaborador_id],
+                ['user_solicita_id'=> Yii::$app->user->identity->colaborador_id]]);
+        }
+
 
         if (isset($_POST['hasEditable'])) {
 
@@ -88,7 +132,7 @@ class TareasController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'identificador' => '',
+            'area' => Tareas::getAreaLaboral(),
         ]);
     }
 
@@ -115,11 +159,11 @@ class TareasController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
-
 //            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'area' => Tareas::getAreaLaboral(),
             ]);
         }
     }
@@ -135,10 +179,13 @@ class TareasController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
+            //return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'area' => Tareas::getAreaLaboral(),
+
             ]);
         }
     }

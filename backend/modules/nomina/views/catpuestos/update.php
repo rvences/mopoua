@@ -6,9 +6,9 @@ use yii\helpers\Html;
 /* @var $model backend\modules\nomina\models\Catpuestos */
 
 $this->title = 'Actualizando el puesto: ' . $model->tipo_colaborador . ' ' . $model->puesto;
-$this->params['breadcrumbs'][] = ['label' => 'Catpuestos', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = ['label' => 'Catálogo de Puestos', 'url' => ['index']];
+//$this->params['breadcrumbs'][] = ['label' => $model->puesto, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = $model->puesto;
 ?>
 <div class="catpuestos-update">
 

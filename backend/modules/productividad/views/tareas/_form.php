@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
 use yii\helpers\ArrayHelper;
-use common\models\User;
+use backend\modules\nomina\models\Colaboradores;
 use backend\modules\productividad\models\Prodcatalogos;
 
 /* @var $this yii\web\View */
@@ -16,7 +16,6 @@ use backend\modules\productividad\models\Prodcatalogos;
 
 <?php
 $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL]);
-
     // *********** Valores por defecto en combos
     $model->asignado_id = (empty($model->asignado_id)) ? Yii::$app->user->identity->id : $model->asignado_id; // Para preseleccionar el dato
     //$model->estado_id = (empty($model->estado_id)) ? Prodcatalogos::getEstadoDefecto() : $model->estado_id;
@@ -33,7 +32,7 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL]);
                 'widgetClass'=>'\kartik\widgets\Select2',
                 'options'=>[
                     //'data'=>$model->asignado_id
-                    'data' => ArrayHelper::map(User::listUserActive(), 'id', 'username'),
+                    'data' => ArrayHelper::map(Colaboradores::listUserActive($area), 'id', 'nombrecompleto'),
                     'options' => ['placeholder' => 'Asignado a'],
                     'pluginOptions' => [
                         'allowClear' => true

@@ -19,17 +19,15 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'asignado_id') ?>
 
-    <?= $form->field($model, 'area_apoyo') ?>
+    <?= $form->field($model, 'tipoactividad_id') ?>
 
-    <?= $form->field($model, 'estado') ?>
+    <?= $form->field($model, 'estado_id') ?>
 
     <?= $form->field($model, 'tarea') ?>
 
     <?php // echo $form->field($model, 'resultado') ?>
 
     <?php // echo $form->field($model, 'fecha_limite') ?>
-
-    <?php // echo $form->field($model, 'resultado_info') ?>
 
     <?php // echo $form->field($model, 'user_solicita_id') ?>
 

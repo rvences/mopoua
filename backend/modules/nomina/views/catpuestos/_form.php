@@ -32,14 +32,43 @@ use wbraganca\dynamicform\DynamicFormWidget;
                 <?= $form->field($model, 'tipo_colaborador',['showLabels'=>false])->textInput(['placeholder'=>'Tipo de Colaborador'])->dropDownList(\backend\modules\nomina\models\Catpuestos::getTipocolaborador(), ['prompt'=>'[Tipo Colaborador]']); ?>
             </div>
 
-            <div class="col-sm-2">
-                <?= $form->field($model, 'plazas',['showLabels'=>false])->textInput(['placeholder'=>'Plazas disponibles']); ?>
-            </div>
+
 
             <div class="col-sm-2">
                 <?= Html::submitButton($model->isNewRecord ? 'Nuevo' : 'Modificar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
             </div>
         </div>
+
+        <div class="form-group kv-fieldset-inline">
+            <?= Html::activeLabel($model, 'Area', [
+                'label'=>'Plazas Disponibles y Area',
+                'class'=>'col-sm-2 control-label'
+            ]); ?>
+
+            <div class="col-sm-3">
+                <?= $form->field($model, 'plazas',['showLabels'=>false])->textInput(['placeholder'=>'Plazas disponibles']); ?>
+            </div>
+
+            <div class="col-sm-3">
+                <?php
+
+
+
+
+                $lista = \yii\helpers\ArrayHelper::map(\backend\modules\nomina\models\Catareapuesto::find()->asArray()->all(), 'id', 'area');
+                echo $form->field($model, 'area_id', ['showLabels'=>false])->textInput(['placeholder' => 'Area Asignado'])->dropDownList($lista, ['prompt'=>'[Area Asignado]']);
+
+                 ?>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
 
         <div class="form-group kv-fieldset-inline">
             <?= Html::activeLabel($model, 'Funciones', [

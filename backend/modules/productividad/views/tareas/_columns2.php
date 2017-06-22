@@ -1,19 +1,5 @@
 <?php
-use kartik\helpers\Html;
-use yii\helpers\Url;
-use backend\modules\productividad\models\Prodcatalogos;
-
-/**
- * Created by PhpStorm.
- * User: rvences
- * Date: 11/06/17
- * Time: 10:31 PM
- */
-
 return [
-
-
-
     [
         'attribute' => 'tarea',
     ],
@@ -25,7 +11,7 @@ return [
         'attribute' => 'user_realizo_id',
         //'filterInputOptions'=>['placeholder'=>'Filtrar por ...'],
         'value'=>function ($model) {
-            return $model->userRealizo->username;
+            return $model->userRealizo->nombrecompleto;
 
         },
     ],

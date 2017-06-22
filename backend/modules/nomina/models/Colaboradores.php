@@ -1,6 +1,7 @@
 <?php
 
 namespace backend\modules\nomina\models;
+use common\models\User;
 
 /**
  * This is the model class for table "colaboradores".
@@ -18,6 +19,7 @@ namespace backend\modules\nomina\models;
  * @property integer $puesto_id
  *
  * @property Catpuestos $puesto
+ * @property User[] $users
  */
 class Colaboradores extends \yii\db\ActiveRecord
 {
@@ -73,6 +75,20 @@ class Colaboradores extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
+            /*
+            if ($this->isNewRecord) {
+                $usuario = new User();
+                $usuario->username = strtolower(substr($this->nombre, 0, 1) . $this->apaterno . substr($this->amaterno, 0, 1)) ;
+                $usuario->auth_key = 'RjwwBJFBEWPsRsj9oCcgivVErTFegjfm';
+                $usuario->password_hash = '$2y$13$qCG9wSmSRq6C0FEMdU9pbeZWfYkwkXrSVG3boHf5Nv3dsbI4km9My';
+                $usuario->email = $usuario->username . '@pkory.com';
+                $usuario->status = 10;
+                $usuario->role = 'CAJA';
+                $usuario->colaborador_id = $this->id;
+                $usuario->save('true');
+
+            }
+            */
             $this->nombre = trim(strtoupper($this->nombre));
             $this->apaterno = trim(strtoupper($this->apaterno));
             $this->amaterno = trim(strtoupper($this->amaterno));
@@ -81,6 +97,33 @@ class Colaboradores extends \yii\db\ActiveRecord
         return false;
     }
 
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        if ($insert) {
+            $usuario = new User();
+            $usuario->username = strtolower(substr($this->nombre, 0, 1) . $this->apaterno . substr($this->amaterno, 0, 1)) ;
+            $usuario->auth_key = 'RjwwBJFBEWPsRsj9oCcgivVErTFegjfm';
+            $usuario->password_hash = '$2y$13$qCG9wSmSRq6C0FEMdU9pbeZWfYkwkXrSVG3boHf5Nv3dsbI4km9My';
+            $usuario->email = $usuario->username . '@pkory.com';
+            $usuario->status = 10;
+            $usuario->role = 'CAJA';
+            $usuario->colaborador_id = $this->id;
+            $usuario->save('true');
+        }
+        /*
+        parent::afterSave($insert, $changedAttributes);
+        $name = $this->user->name;
+        $serial = ?
+    $to = $this->user->email;
+    $subject = 'new damage';
+    $body = 'mr'.$name.'your damage with serial number'.$serial.'is registered';
+    if ($insert) {
+
+        App::sendMail($to, $subject, $body);
+    }*/
+}
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -88,4 +131,30 @@ class Colaboradores extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Catpuestos::className(), ['id' => 'puesto_id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsers()
+    {
+        return $this->hasMany(User::className(), ['colaborador_id' => 'id']);
+    }
+
+    /*
+     * Obtiene el listado de los colaboradores de acuerdo al área laboral asignada
+     * */
+    public static function listUserActive($arealaboral = 0) {
+
+        if ($arealaboral == 0) {
+            return Colaboradores::find()->select(['colaboradores.id', 'nombre', 'apaterno', 'amaterno'])->where(['fbaja' => null])->orderBy('nombre, apaterno')->all();
+        }
+        return Colaboradores::find()->select(['colaboradores.id', 'nombre', 'apaterno', 'amaterno'])->joinWith('puesto')->where(['fbaja' => null, 'area_id' => $arealaboral])->orderBy('nombre, apaterno')->all();
+
+    }
+
+
+    public function getNombrecompleto() {
+        return $this->nombre . ' ' . $this->apaterno . ' ' . $this->amaterno;
+    }
+
 }

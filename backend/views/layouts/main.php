@@ -86,7 +86,7 @@ AppAsset::register($this);
                 )] : '',
 
             ['label' => 'Personal', 'items'=> array(
-                ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                ['label' => 'Logout (' . Yii::$app->user->identity->username . Yii::$app->user->identity->id . ')',
                     'url' => ['/site/logout'],
                     'linkOptions' => ['data-method' => 'post']],
             )],
