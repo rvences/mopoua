@@ -87,12 +87,14 @@ class ConteodiarioController extends Controller
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
-                $arqueo_anterior = Arqueo::find()->select(['clave1', 'clave2', 'usercontinua'])->orderBy(['id' => SORT_DESC])->one();
+                $arqueo_anterior = Arqueo::find()->select(['username', 'comentario', 'clave1', 'clave2', 'usercontinua'])->orderBy(['id' => SORT_DESC])->one();
 
                     //$arqueo_anterior = Arqueo::find()->select(['clave1', 'clave2', 'usercontinua'])->orderBy(['id' => SORT_DESC]);
                     //echo $arqueo_anterior->createCommand()->getRawSql();
                 if ($arqueo_anterior->usercontinua == Yii::$app->user->identity->username) {
-                    Yii::$app->getSession()->addFlash('warning', 'Tus claves temporales de acceso son:<br> Cajero: ' .
+                    Yii::$app->getSession()->addFlash('warning',
+                        'Comentario de ' . $arqueo_anterior->username . ': <b>' . $arqueo_anterior->comentario . '</b>' .
+                        '<br>Tus claves temporales de acceso son:<br> Cajero: ' .
                         $arqueo_anterior->clave1 . ' Caja: ' . $arqueo_anterior->clave2 );
                 }
 

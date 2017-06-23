@@ -62,6 +62,11 @@ class User extends ActiveRecord implements IdentityInterface
 
     }
 
+    public static function listUserCaja() {
+        return User::find()->where(['status' => self::STATUS_ACTIVE, 'role' => ['CAJA', 'ADMIN']])->orderBy('username')->all();
+    }
+
+
     public static function isUserCocina($id)
     {
         if (User::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE, 'role' => ['COCINERO', 'SOUS CHEF', 'ADMIN']])){

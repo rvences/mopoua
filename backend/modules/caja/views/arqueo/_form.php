@@ -31,7 +31,8 @@ use common\models\User;
 
         <div class="col-xs-3">
             <?php
-            $lista = ArrayHelper::map(User::find()->asArray()->all(), 'username', 'username');
+            //$lista = ArrayHelper::map(User::find()->asArray()->all(), 'username', 'username');
+            $lista = ArrayHelper::map(User::listUserCaja(), 'username', 'username');
             //$model->usercontinua = Yii::$app->user->identity->id; // Para preseleccionar el dato
             echo $form->field($model, 'usercontinua',['showLabels'=>false])->dropDownList($lista, ['prompt'=>'Abre caja en siguiente turno']);
             ?>
