@@ -93,7 +93,11 @@ class TareasController extends Controller
             $dataProvider = $searchModel->searchComplete(Yii::$app->request->queryParams)
             :
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
             //$dataProvider->query->where()->
+
+            $dataProvider->query->where('modified = null');
+
 
 
             // select cp.area_id, t.id, t.asignado_id, t.tarea, c.nombre, c.puesto_id from tareas as t join colaboradores as c on t.asignado_id = c.id join catpuestos as cp on cp.id = c.puesto_id where area_id=2;
