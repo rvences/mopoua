@@ -2,6 +2,7 @@
     background-color: #ffcb4f;
 }
 
+
 .fondo {
     background-color: #f0f0f0;
 }
@@ -79,10 +80,11 @@ a.desc:after {
     content: "\e156";
 }
 
+/*
 .grid-view td {
     white-space: nowrap;
 }
-
+*/
 .grid-view .filters input,
 .grid-view .filters select {
     min-width: 50px;
