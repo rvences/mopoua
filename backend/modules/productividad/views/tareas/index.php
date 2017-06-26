@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <p class="col-sm-2"><?= Html::a('Semana Pasada', ['index', 'historia' => 'semana'], ['class' => 'btn btn-warning']) ?></p>
 
     </div>
-
+    <div class="table-responsive">
         <?php
 
         if (isset($_GET['historia']) ) {
@@ -62,17 +62,29 @@ $this->params['breadcrumbs'][] = $this->title;
                 'dataProvider'=>$dataProvider,
                 //'filterModel'=>$searchModel,
                 'columns'=> require(__DIR__.'/_columns2.php'),
+                'responsiveWrap' => true,
 
                 'rowOptions' => function ($model){
-                    if ($model->fecha_limite < $model->modified ) {
+                    if ($model->fecha_limite < $model->modified && $model->user_realizo_id = null) {
                         return ['class' => 'atrasado'];
                     } else {
                         return [ ];
                     }
                 },
+
+
+                'bordered'=>true,
+                'striped'=>true,
+                'condensed'=>true,
+                'responsive'=>true,
+                'hover'=>true,
+                'showPageSummary'=>true,
+
+
             ]);
 
         } else {
+
             echo \kartik\grid\GridView::widget([
                 'export' => false,
                 'dataProvider'=>$dataProvider,
@@ -90,3 +102,4 @@ $this->params['breadcrumbs'][] = $this->title;
 
         }
         ?>
+    </div>
