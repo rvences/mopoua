@@ -89,6 +89,8 @@ class TareasController extends Controller
         }
 
         if (isset($_GET['area'])) {
+            $dataProvider->query->andWhere('modified = null');
+
             (Tareas::getAreaLaboral() > 0) ?
             $dataProvider = $searchModel->searchComplete(Yii::$app->request->queryParams)
             :
@@ -96,7 +98,7 @@ class TareasController extends Controller
 
             //$dataProvider->query->where()->
 
-            $dataProvider->query->where('modified = null');
+
 
 
 
