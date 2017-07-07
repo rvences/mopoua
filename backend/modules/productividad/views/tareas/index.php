@@ -46,11 +46,11 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="tareas-index">
 
     <div class="row">
-        <p class="col-sm-3"><?= Html::a('Nueva Tarea', ['create'], ['class' => 'btn btn-success']) ?></p>
-        <p class="col-sm-3"><?= Html::a(($area === 0) ? 'Todos ' : 'Todo de '. $area['area'], ['index', 'area' => 'laboral'], ['class' => 'btn btn-success']) ?></p>
+        <p class="col-sm-2"><?= Html::a('Nueva Tarea', ['create'], ['class' => 'btn btn-success']) ?></p>
+        <p class="col-sm-2"><?= Html::a(($area === 0) ? 'Todos ' : 'Todo de '. $area['area'], ['index', 'area' => 'laboral'], ['class' => 'btn btn-success']) ?></p>
         <p class="col-sm-2"><?= Html::a('Hoy', ['index'], ['class' => 'btn btn-warning']) ?></p>
-        <p class="col-sm-2"><?= Html::a('Ult. 24 hrs', ['index', 'historia' => '24hrs'], ['class' => 'btn btn-warning']) ?></p>
-        <p class="col-sm-2"><?= Html::a('Semana Pasada', ['index', 'historia' => 'semana'], ['class' => 'btn btn-warning']) ?></p>
+        <p class="col-sm-3"><?= Html::a('Realizado en las Ult. 24 hrs', ['index', 'historia' => '24hrs'], ['class' => 'btn btn-warning']) ?></p>
+        <p class="col-sm-2"><?= Html::a('Realizado la Semana Pasada', ['index', 'historia' => 'semana'], ['class' => 'btn btn-warning']) ?></p>
 
     </div>
     <div class="table-responsive">

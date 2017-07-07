@@ -1,11 +1,13 @@
 <?php
 
 namespace backend\modules\productividad\controllers;
+use backend\modules\nomina\models\Colaboradores;
 use backend\modules\productividad\models\Prodcatalogos;
 use common\models\User;
 use Yii;
 use backend\modules\productividad\models\Tareas;
 use backend\modules\productividad\models\search\TareasSearch;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -68,14 +70,17 @@ class TareasController extends Controller
 
 
         if (isset($_GET['historia'])) {
+
             switch ($_GET['historia']) {
                 case 'semana':
-                    $dataProvider->query->where('modified > ' . date('Y-m-d', strtotime('-7 day')));
+                    $dataProvider->query->where('modified >= ' . "'" .date('Y-m-d', strtotime('-7 day')) . "'");
+                    $dataProvider->query->andWhere('modified <= ' . "'" . date('Y-m-d') . "'");
                     $dataProvider->query->where('estado_id =' . Prodcatalogos::getEstadoFinalizado());
                     break;
                 case '24hrs':
-                    $dataProvider->query->where('modified > ' . date('Y-m-d', strtotime('-1 day')));
-                    $dataProvider->query->where('estado_id =' . Prodcatalogos::getEstadoFinalizado());
+                    $dataProvider->query->where('modified >= ' . "'" .date('Y-m-d', strtotime('-2 day')) . "'");
+                    $dataProvider->query->andWhere('modified <= ' . "'" . date('Y-m-d') . "'");
+                    $dataProvider->query->andWhere('estado_id =' . Prodcatalogos::getEstadoFinalizado());
                     break;
                 default:
                     $dataProvider->query->where('estado_id <> ' . Prodcatalogos::getEstadoFinalizado());
@@ -85,26 +90,37 @@ class TareasController extends Controller
             }
 
         } else {
+            // Actividades del dia de hoy
+            $dataProvider->query->where('fecha_limite <= ' . "'" . date('Y-m-d') . "'");
             $dataProvider->query->andWhere('estado_id <> ' . Prodcatalogos::getEstadoFinalizado());
+
         }
 
         if (isset($_GET['area'])) {
-            $dataProvider->query->andWhere('modified = null');
 
-            (Tareas::getAreaLaboral() > 0) ?
-            $dataProvider = $searchModel->searchComplete(Yii::$app->request->queryParams)
-            :
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            $arealaboral = Tareas::getAreaLaboral();
+            $connection = Yii::$app->getDb();
+            if ($arealaboral == 0) {
+                $command = $connection->createCommand('
+            SELECT c.id AS asignado_id FROM colaboradores AS c');
 
-            //$dataProvider->query->where()->
+            } else {
+                $command = $connection->createCommand('
+            SELECT c.id AS asignado_id FROM colaboradores AS c LEFT JOIN catpuestos AS cp ON cp.id = c.puesto_id WHERE area_id = :arealaboral', [':arealaboral' => $arealaboral['area_id']]);
 
-
-
-
-
-            // select cp.area_id, t.id, t.asignado_id, t.tarea, c.nombre, c.puesto_id from tareas as t join colaboradores as c on t.asignado_id = c.id join catpuestos as cp on cp.id = c.puesto_id where area_id=2;
+            }
 
 
+                        $subQuery = $command->queryAll();
+
+            $query = Tareas::find()
+                ->where(['IN', 'asignado_id', $subQuery])
+                ->andWhere('user_realizo_id is null')
+            ;
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+
+            ]);
 
         } else {
             $dataProvider->query->andFilterWhere(['or',

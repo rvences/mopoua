@@ -153,6 +153,27 @@ class Colaboradores extends \yii\db\ActiveRecord
     }
 
 
+    /*
+     * Obtiene un Array de los usuarios de un área laboral específica
+     */
+    public static function getUsersId($arealaboral = 0) {
+
+        if ($arealaboral == 0) {
+            return Colaboradores::find()->select(['colaboradores.id'])->where(['fbaja' => null])->orderBy('nombre, apaterno')->all();
+        }
+//        return Colaboradores::find()->select(['colaboradores.id'])->joinWith('puesto')->where(['fbaja' => null, 'area_id' => $arealaboral])->all();
+
+        $valor = Colaboradores::find()->select(['colaboradores.id'])->all();
+
+        $valor = Colaboradores::find()->select('id')->all();
+
+            return $valor;
+        //print_r( Colaboradores::find()->select(['colaboradores.id'])->asArray()->all());
+//return ['112'];
+        //return Colaboradores::find()->select('colaboradores.id')->joinWith('puesto')->where(['fbaja' => null, 'area_id' => $arealaboral])->asArray()->all();
+    }
+
+
     public function getNombrecompleto() {
         return $this->nombre . ' ' . $this->apaterno . ' ' . $this->amaterno;
     }
