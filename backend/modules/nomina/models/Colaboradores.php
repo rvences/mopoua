@@ -148,7 +148,9 @@ class Colaboradores extends \yii\db\ActiveRecord
         if ($arealaboral == 0) {
             return Colaboradores::find()->select(['colaboradores.id', 'nombre', 'apaterno', 'amaterno'])->where(['fbaja' => null])->orderBy('nombre, apaterno')->all();
         }
-        return Colaboradores::find()->select(['colaboradores.id', 'nombre', 'apaterno', 'amaterno'])->joinWith('puesto')->where(['fbaja' => null, 'area_id' => $arealaboral])->orderBy('nombre, apaterno')->all();
+        //return Colaboradores::find()->select(['colaboradores.id', 'nombre', 'apaterno', 'amaterno'])->joinWith('puesto')->where(['fbaja' => null, 'area_id' => $arealaboral])->orderBy('nombre, apaterno')->all();
+
+        return Colaboradores::find()->select(['colaboradores.id', 'nombre', 'apaterno', 'amaterno'])->joinWith('puesto')->where(['fbaja' => null, 'area_id' => $arealaboral])->union('SELECT colaboradores.id, nombre, apaterno, amaterno FROM colaboradores WHERE nombre ="RAFAEL KORY"')->orderBy('nombre, apaterno')->all();
 
     }
 
