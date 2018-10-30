@@ -14,18 +14,35 @@ return [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'id',
     // ],
+
     [
+        'filterType' => \kartik\grid\GridView::FILTER_SELECT2,
+        'filter' => \yii\helpers\ArrayHelper::map(\backend\modules\nomina\models\Colaboradores::find()->asArray()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'filterInputOptions' => ['placeholder' => 'Nombre'],
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'colaborador_id',
+        'value' => function ($model) {
+            return $model->colaborador->nombre . ' ' . $model->colaborador->apaterno . ' ' . $model->colaborador->amaterno;
+        }
     ],
+
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'movimiento_fecha',
     ],
+
+
     [
+        'filterType' => \kartik\grid\GridView::FILTER_SELECT2,
+        'filter' => \yii\helpers\ArrayHelper::map(\backend\modules\nomina\models\CatMovimientosNomina::find()->asArray()->orderBy('movimiento')->all(), 'id', 'movimiento'),
+        'filterInputOptions' => ['placeholder' => 'Movimiento'],
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'movimiento_nomina_id',
+        'value' => function ($model) {
+            return $model->movimientoNomina->movimiento;
+        }
     ],
+
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'movimiento_nomina_info',
