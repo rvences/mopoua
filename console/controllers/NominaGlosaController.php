@@ -144,12 +144,24 @@ class NominaGlosaController extends Controller {
                 $nominaGlosaColaborador = new NominaGlosa();
                 $nominaGlosaColaborador->colaborador_id = $colaborador['id'];
                 $nominaGlosaColaborador->puesto_id = $colaborador['puesto_id'];
-                $nominaGlosaColaborador->deduccion = (float)$diario['monto'];
                 $nominaGlosaColaborador->fechas_pago_id = $nomina['id'];
                 $nominaGlosaColaborador->created_at = $fecha;
                 $nominaGlosaColaborador->concepto = $diario['movimiento_fecha'] . ' : ' . $diario['movimientoNomina']['movimiento'];
                 if ($diario['movimientoNomina']['clave'] == 'DE') {
                     $nominaGlosaColaborador->tipo_movimiento  =  'DEDUCCION';
+                    $nominaGlosaColaborador->deduccion = (float)$diario['monto'];
+                }
+                if ($diario['movimientoNomina']['clave'] == 'PK') {
+                    $nominaGlosaColaborador->tipo_movimiento  =  'ESTABLECIMIENTO';
+                    $nominaGlosaColaborador->pk = (float)$diario['monto'];
+                }
+                if ($diario['movimientoNomina']['clave'] == 'CR') {
+                    $nominaGlosaColaborador->tipo_movimiento  =  'CREDITO';
+                    $nominaGlosaColaborador->creditos = (float)$diario['monto'];
+                }
+                if ($diario['movimientoNomina']['clave'] == 'PE') {
+                    $nominaGlosaColaborador->tipo_movimiento  =  'PERCEPCION';
+                    $nominaGlosaColaborador->percepcion = (float)$diario['monto'];
                 }
                 $nominaGlosaColaborador->save();
                 #VERIFICAR ERRORES ANTES DE CONTINUAR
