@@ -3,8 +3,8 @@
 namespace backend\modules\nomina\controllers;
 
 use Yii;
-use backend\modules\nomina\models\Colaboradores;
-use backend\modules\nomina\models\search\ColaboradoresSearch;
+use backend\modules\nomina\models\MovimientoDiario;
+use backend\modules\nomina\models\search\MovimientoDiarioSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -12,9 +12,9 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * ColaboradoresController implements the CRUD actions for Colaboradores model.
+ * MovimientoDiarioController implements the CRUD actions for MovimientoDiario model.
  */
-class ColaboradoresController extends Controller
+class MovimientoDiarioController extends Controller
 {
     /**
      * @inheritdoc
@@ -33,12 +33,12 @@ class ColaboradoresController extends Controller
     }
 
     /**
-     * Lists all Colaboradores models.
+     * Lists all MovimientoDiario models.
      * @return mixed
      */
     public function actionIndex()
     {    
-        $searchModel = new ColaboradoresSearch();
+        $searchModel = new MovimientoDiarioSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -49,7 +49,7 @@ class ColaboradoresController extends Controller
 
 
     /**
-     * Displays a single Colaboradores model.
+     * Displays a single MovimientoDiario model.
      * @param integer $id
      * @return mixed
      */
@@ -59,12 +59,12 @@ class ColaboradoresController extends Controller
         if($request->isAjax){
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "Colaborador #".$id,
+                    'title'=> "MovimientoDiario #".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $this->findModel($id),
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Modificar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
                 ];    
         }else{
             return $this->render('view', [
@@ -74,7 +74,7 @@ class ColaboradoresController extends Controller
     }
 
     /**
-     * Creates a new Colaboradores model.
+     * Creates a new MovimientoDiario model.
      * For ajax request will return json object
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -82,7 +82,7 @@ class ColaboradoresController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new Colaboradores();  
+        $model = new MovimientoDiario();  
 
         if($request->isAjax){
             /*
@@ -91,33 +91,31 @@ class ColaboradoresController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Registra a un nuevo Colaboradores",
+                    'title'=> "Create new MovimientoDiario",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new Colaboradores",
-                    'content'=>'<span class="text-success">Create Colaboradores success</span>',
+                    'title'=> "Create new MovimientoDiario",
+                    'content'=>'<span class="text-success">Create MovimientoDiario success</span>',
                     'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                             Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
         
                 ];         
             }else{           
                 return [
-                    // Al intentar guardar y marcar un error
-
-                    'title'=> "Registra a u nuevo Colaborador - ERROR",
+                    'title'=> "Create new MovimientoDiario",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
             }
@@ -137,7 +135,7 @@ class ColaboradoresController extends Controller
     }
 
     /**
-     * Updates an existing Colaboradores model.
+     * Updates an existing MovimientoDiario model.
      * For ajax request will return json object
      * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -155,55 +153,33 @@ class ColaboradoresController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Actualizando al Colaborador Biométrico #". $model->clave,
+                    'title'=> "Update MovimientoDiario #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Actualizar',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
-            }else if($model->load($request->post()) ){
-
-                ($model->fbaja) ? $model->activo = 0 : $model->activo = 1 ;
-
-
-
-                /*
-                                 if ($model->save()) {
-
-                 */
-
-                if ($model->save()) {
-                    return [
-                        'forceReload'=>'#crud-datatable-pjax',
-                        'title'=> "Colaborador Biométrico #".$model->clave,
-                        'content'=>$this->renderAjax('view', [
-                            'model' => $model,
-                        ]),
-                        'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Modificar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                    ];
-                } else{
-                    return [
-                        'title'=> "Actualizando al Colaborador: ERROR",
-                        'content'=>$this->renderAjax('update', [
-                            'model' => $model,
-                        ]),
-                        'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::button('Actualizar',['class'=>'btn btn-primary','type'=>"submit"])
-                    ];
-                }
-
+            }else if($model->load($request->post()) && $model->save()){
+                return [
+                    'forceReload'=>'#crud-datatable-pjax',
+                    'title'=> "MovimientoDiario #".$id,
+                    'content'=>$this->renderAjax('view', [
+                        'model' => $model,
+                    ]),
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                ];    
+            }else{
+                 return [
+                    'title'=> "Update MovimientoDiario #".$id,
+                    'content'=>$this->renderAjax('update', [
+                        'model' => $model,
+                    ]),
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                ];        
             }
-
-
-
-
-
-
-
-
-
         }else{
             /*
             *   Process for non-ajax request
@@ -219,7 +195,7 @@ class ColaboradoresController extends Controller
     }
 
     /**
-     * Delete an existing Colaboradores model.
+     * Delete an existing MovimientoDiario model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -247,7 +223,7 @@ class ColaboradoresController extends Controller
     }
 
      /**
-     * Delete multiple existing Colaboradores model.
+     * Delete multiple existing MovimientoDiario model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -278,15 +254,15 @@ class ColaboradoresController extends Controller
     }
 
     /**
-     * Finds the Colaboradores model based on its primary key value.
+     * Finds the MovimientoDiario model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Colaboradores the loaded model
+     * @return MovimientoDiario the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Colaboradores::findOne($id)) !== null) {
+        if (($model = MovimientoDiario::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

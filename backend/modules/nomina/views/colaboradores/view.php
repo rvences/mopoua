@@ -1,34 +1,21 @@
 <?php
 
-use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model backend\modules\nomina\models\Colaboradores */
-
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Colaboradores', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="colaboradores-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
+ 
     <?= DetailView::widget([
         'model' => $model,
+        'formatter' => [
+            'class' => '\yii\i18n\Formatter',
+            'dateFormat' => 'php:d \d\e F \d\e Y',
+            'datetimeFormat' => 'MM/dd/yyyy HH:mm::ss',
+        ],
         'attributes' => [
-            'id',
+            //'id',
             'clave',
             'nombre',
             'apaterno',
@@ -36,9 +23,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'rfc',
             'curp',
             'nss',
-            'puesto_id',
-            'fingreso',
-            'fbaja',
+            'puesto.puesto',
+            'fingreso:date',
+            'fbaja:date',
+            //'activo',
+            'temporalidadPago.temporalidad'
         ],
     ]) ?>
 

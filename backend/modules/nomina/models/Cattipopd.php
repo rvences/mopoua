@@ -5,11 +5,11 @@ namespace backend\modules\nomina\models;
 /**
  * This is the model class for table "cattipopd".
  *
- * @property integer $id
+ * @property int $id
  * @property string $clave
- * @property string $concepto
- * @property string $tipo
- * @property string $descripcion
+ * @property string $concepto Concepto del pago
+ * @property string $tipo Percepción o Deducción
+ * @property string $descripcion  Descripción completa del tipo de Concepto
  *
  * @property Nompercepciondeduccion[] $nompercepciondeduccions
  */
@@ -35,6 +35,7 @@ class Cattipopd extends \yii\db\ActiveRecord
             [['concepto'], 'string', 'max' => 255],
             [['tipo'], 'string', 'max' => 20],
             [['clave'], 'unique'],
+            [['clave', 'tipo'], 'filter', 'filter' => 'strtoupper'],
         ];
     }
 

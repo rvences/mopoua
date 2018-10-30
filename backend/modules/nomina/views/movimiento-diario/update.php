@@ -3,9 +3,9 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model backend\modules\nomina\models\Colaboradores */
+/* @var $model backend\modules\nomina\models\MovimientoDiario */
 ?>
-<div class="colaboradores-update">
+<div class="movimiento-diario-update">
 
     <?= $this->render('_form', [
         'model' => $model,

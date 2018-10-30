@@ -94,22 +94,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
         [
             'class' => 'kartik\grid\EditableColumn',
-            'attribute' => 'descripcion',
-            'editableOptions' => function () {
-                return [
-                    'asPopover' =>false,
-                    'options' => [
-                        'style'=>'width:200px',
-                    ]
-                ];
-            },
-            'value'=>function ($model) {
-                return $model->descripcion;
-
-            },
-        ],
-        [
-            'class' => 'kartik\grid\EditableColumn',
             'attribute' => 'concepto',
             'editableOptions' => function () {
                 return [
@@ -121,6 +105,23 @@ $this->params['breadcrumbs'][] = $this->title;
             },
             'value'=>function ($model) {
                 return $model->concepto;
+
+            },
+        ],
+
+        [
+            'class' => 'kartik\grid\EditableColumn',
+            'attribute' => 'descripcion',
+            'editableOptions' => function () {
+                return [
+                    'asPopover' =>false,
+                    'options' => [
+                        'style'=>'width:200px',
+                    ]
+                ];
+            },
+            'value'=>function ($model) {
+                return $model->descripcion;
 
             },
         ],

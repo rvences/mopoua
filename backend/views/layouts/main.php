@@ -77,11 +77,15 @@ AppAsset::register($this);
                 [
                     'label' => 'Nomina', 'items' =>array(
                         ['label' => 'Colaboradores', 'url'=> ['/nomina/colaboradores']],
+                        ['label' => 'Calendarización de Pagos', 'url'=> ['/nomina/fechas-pago']],
+                        ['label' => 'Movimientos Diarios', 'url'=> ['/nomina/movimiento-diario']],
+
 
 
                     ['label' => 'Catálogos' , 'items' =>array(
                         ['label' => 'Catálogo de Puestos', 'url'=> ['/nomina/catpuestos']],
                         ['label' => 'Catálogo de Percepcion y Deduccion', 'url'=> ['/nomina/cattipopd']],
+
                     ), ],
                 )] : '',
 

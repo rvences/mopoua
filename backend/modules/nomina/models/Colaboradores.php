@@ -6,19 +6,25 @@ use common\models\User;
 /**
  * This is the model class for table "colaboradores".
  *
- * @property integer $id
- * @property string $clave
- * @property string $nombre
- * @property string $apaterno
- * @property string $amaterno
- * @property string $rfc
- * @property string $curp
- * @property string $nss
+ * @property int $id
+ * @property string $clave Clave del Colaborador
+ * @property string $nombre Nombre(s)
+ * @property string $apaterno Ap. Paterno
+ * @property string $amaterno Ap. Materno
+ * @property string $rfc RFC
+ * @property string $curp CURP
+ * @property string $nss Número Seguro Social
+ * @property int $puesto_id Identificador del puesto
  * @property string $fingreso
  * @property string $fbaja
- * @property integer $puesto_id
+ * @property int $activo
+ * @property int $temporalidad_pago_id
  *
+ * @property TemporalidadPago $temporalidadPago
  * @property Catpuestos $puesto
+ * @property Tareas[] $tareas
+ * @property Tareas[] $tareas0
+ * @property Tareas[] $tareas1
  * @property User[] $users
  */
 class Colaboradores extends \yii\db\ActiveRecord
@@ -38,7 +44,7 @@ class Colaboradores extends \yii\db\ActiveRecord
     {
         return [
             [['clave', 'nombre', 'apaterno', 'amaterno'], 'required'],
-            [['puesto_id'], 'integer'],
+            [['puesto_id', 'activo', 'temporalidad_pago_id'], 'integer'],
             [['fingreso', 'fbaja'], 'safe'],
             [['clave'], 'string', 'max' => 10],
             [['nombre'], 'string', 'max' => 100],
@@ -48,9 +54,13 @@ class Colaboradores extends \yii\db\ActiveRecord
             [['nss'], 'string', 'max' => 11],
             [['clave'], 'unique'],
             [['rfc'], 'unique'],
+            [['temporalidad_pago_id'], 'exist', 'skipOnError' => true, 'targetClass' => TemporalidadPago::className(), 'targetAttribute' => ['temporalidad_pago_id' => 'id']],
             [['puesto_id'], 'exist', 'skipOnError' => true, 'targetClass' => Catpuestos::className(), 'targetAttribute' => ['puesto_id' => 'id']],
+            [['nombre', 'apaterno', 'amaterno', 'rfc', 'curp', 'nss'], 'filter', 'filter' => 'strtoupper'],
         ];
     }
+
+
 
     /**
      * @inheritdoc
@@ -59,16 +69,18 @@ class Colaboradores extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'clave' => 'Clave Biométrico',
+            'clave' => 'Clave dispositivo biométrico',
             'nombre' => 'Nombre',
-            'apaterno' => 'Apaterno',
-            'amaterno' => 'Amaterno',
-            'rfc' => 'Rfc',
-            'curp' => 'Curp',
-            'nss' => 'Nss',
-            'puesto_id' => 'Puesto',
-            'fingreso' => 'Ingreso',
-            'fbaja' => 'Baja',
+            'apaterno' => 'Apellido paterno',
+            'amaterno' => 'Apellido materno',
+            'rfc' => 'RFC',
+            'curp' => 'CURP',
+            'nss' => 'Número de Seguro Social',
+            'puesto_id' => 'Puesto Actual',
+            'fingreso' => 'Fecha de Ingreso',
+            'fbaja' => 'Fecha de Baja',
+            'activo' => 'Activo',
+            'temporalidad_pago_id' => 'Temporalidad de Pago',
         ];
     }
 
@@ -111,18 +123,15 @@ class Colaboradores extends \yii\db\ActiveRecord
             $usuario->colaborador_id = $this->id;
             $usuario->save('true');
         }
-        /*
-        parent::afterSave($insert, $changedAttributes);
-        $name = $this->user->name;
-        $serial = ?
-    $to = $this->user->email;
-    $subject = 'new damage';
-    $body = 'mr'.$name.'your damage with serial number'.$serial.'is registered';
-    if ($insert) {
-
-        App::sendMail($to, $subject, $body);
-    }*/
 }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTemporalidadPago()
+    {
+        return $this->hasOne(TemporalidadPago::className(), ['id' => 'temporalidad_pago_id']);
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -130,6 +139,30 @@ class Colaboradores extends \yii\db\ActiveRecord
     public function getPuesto()
     {
         return $this->hasOne(Catpuestos::className(), ['id' => 'puesto_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTareas()
+    {
+        return $this->hasMany(Tareas::className(), ['user_solicita_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTareas0()
+    {
+        return $this->hasMany(Tareas::className(), ['user_realizo_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTareas1()
+    {
+        return $this->hasMany(Tareas::className(), ['asignado_id' => 'id']);
     }
 
     /**

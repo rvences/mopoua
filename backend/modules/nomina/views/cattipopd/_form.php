@@ -24,7 +24,7 @@ use kartik\widgets\ActiveForm;
             <?= $form->field($modelpd, 'clave',['showLabels'=>false])->textInput(['placeholder'=>'Clave']); ?>
         </div>
 
-        <div class="col-sm-2">
+        <div class="col-sm-7">
             <?= $form->field($modelpd, 'tipo', ['showLabels'=>false])->dropDownList(\backend\modules\nomina\models\Cattipopd::gettipopd(), ['prompt'=>'[ Tipo Concepto ]']) ?>
         </div>
 
@@ -34,8 +34,8 @@ use kartik\widgets\ActiveForm;
         </div>
 
 
-        <div class="col-sm-4">
-            <?= $form->field($modelpd, 'descripcion',['showLabels'=>false])->textInput(['placeholder'=>'Descripción']); ?>
+        <div class="col-sm-6">
+            <?= $form->field($modelpd, 'descripcion',['showLabels'=>false])->textInput(['placeholder'=>'Descripción Completa de la Percepción']); ?>
         </div>
 
 
