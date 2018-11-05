@@ -15,7 +15,11 @@ use kartik\widgets\ActiveForm;
     ]); ?>
     <?php
         $fullName = new \yii\db\Expression('CONCAT_WS(" ", nombre, apaterno, amaterno)');
-        $dato = \yii\helpers\ArrayHelper::map(\backend\modules\nomina\models\Colaboradores::find()->select(['id','search_nombre' => $fullName] )->asArray()->all(), 'id',
+        $dato = \yii\helpers\ArrayHelper::map(\backend\modules\nomina\models\Colaboradores::find()
+            ->select(['id','search_nombre' => $fullName] )
+            ->where(['activo' => 1])
+            ->orderBy($fullName)
+            ->asArray()->all(), 'id',
             function($model, $defaultValue) {
             return $model['search_nombre'];
             }
