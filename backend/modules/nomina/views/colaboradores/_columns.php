@@ -41,9 +41,7 @@ return [
         'filterInputOptions' => ['placeholder' => 'Puesto'],
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'puesto_id',
-        'value' => function ($model) {
-            return $model->puesto->puesto;
-        }
+        'value' => 'puesto.puesto',
     ],
     // [
         // 'class'=>'\kartik\grid\DataColumn',
@@ -75,9 +73,7 @@ return [
          'filterInputOptions' => ['placeholder' => 'Temporalidad'],
          'class'=>'\kartik\grid\DataColumn',
          'attribute'=>'temporalidad_pago_id',
-         'value' => function ($model) {
-             return $model->temporalidadPago->temporalidad;
-         }
+         'value' => 'temporalidadPago.temporalidad'
      ],
     [
         'class' => 'kartik\grid\ActionColumn',
