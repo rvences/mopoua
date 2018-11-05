@@ -39,6 +39,10 @@ class ColaboradoresController extends Controller
     public function actionIndex()
     {    
         $searchModel = new ColaboradoresSearch();
+
+        // Haciendo el filtro de los colaboradores activos
+        $searchModel->activo = 1;
+
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [

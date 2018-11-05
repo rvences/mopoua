@@ -19,16 +19,8 @@ return [
         //'attribute'=>'clave',
     //],
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'nombre',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'apaterno',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'amaterno',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'bcolaborador_nombre',
     ],
     //[
         //'class'=>'\kartik\grid\DataColumn',
@@ -42,10 +34,17 @@ return [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'nss',
     // ],
-     [
-         'class'=>'\kartik\grid\DataColumn',
-         'attribute'=>'puesto.puesto',
-     ],
+    [
+        'filterType' => \kartik\grid\GridView::FILTER_SELECT2,
+
+        'filter' => \yii\helpers\ArrayHelper::map(\backend\modules\nomina\models\Catpuestos::find()->select(['id', 'puesto'])->asArray()->orderBy('puesto')->all(), 'id', 'puesto'),
+        'filterInputOptions' => ['placeholder' => 'Puesto'],
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'puesto_id',
+        'value' => function ($model) {
+            return $model->puesto->puesto;
+        }
+    ],
     // [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'fingreso',
@@ -54,13 +53,31 @@ return [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'fbaja',
     // ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'activo',
-    // ],
      [
+         'filterType' => \kartik\grid\GridView::FILTER_SELECT2,
+
+         'filter' => array(1 => 'Activo', 0 => 'Inactivo'),
+         'filterInputOptions' => ['placeholder' => 'Estado'],
          'class'=>'\kartik\grid\DataColumn',
-         'attribute'=>'temporalidadPago.temporalidad',
+         'attribute'=>'activo',
+         'value' => function ($model) {
+            if ($model->activo == 1) {
+                return 'Activo';
+            } else { return 'Inactivo'; }
+         }
+
+     ],
+
+     [
+         'filterType' => \kartik\grid\GridView::FILTER_SELECT2,
+
+         'filter' => \yii\helpers\ArrayHelper::map(\backend\modules\nomina\models\TemporalidadPago::find()->asArray()->orderBy('temporalidad')->all(), 'id', 'temporalidad'),
+         'filterInputOptions' => ['placeholder' => 'Temporalidad'],
+         'class'=>'\kartik\grid\DataColumn',
+         'attribute'=>'temporalidad_pago_id',
+         'value' => function ($model) {
+             return $model->temporalidadPago->temporalidad;
+         }
      ],
     [
         'class' => 'kartik\grid\ActionColumn',

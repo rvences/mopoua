@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Url;
+use yii\db\Expression;
 
 return [
     [
@@ -16,8 +17,13 @@ return [
     // ],
 
     [
+
         'filterType' => \kartik\grid\GridView::FILTER_SELECT2,
-        'filter' => \yii\helpers\ArrayHelper::map(\backend\modules\nomina\models\Colaboradores::find()->asArray()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'filter' => \yii\helpers\ArrayHelper::map(\backend\modules\nomina\models\Colaboradores::find()
+            ->select(['colaboradores.id',
+                        'bcolaborador' =>  new Expression('CONCAT_WS(" ", nombre, apaterno, amaterno)')])
+
+            ->asArray()->orderBy('bcolaborador')->all(), 'id', 'bcolaborador'),
         'filterInputOptions' => ['placeholder' => 'Nombre'],
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'colaborador_id',

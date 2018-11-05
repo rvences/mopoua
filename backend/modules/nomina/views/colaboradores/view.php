@@ -27,8 +27,15 @@ use yii\widgets\DetailView;
             'fingreso:date',
             'fbaja:date',
             //'activo',
-            'temporalidadPago.temporalidad'
+            'temporalidadPago.temporalidad',
+            'telefono',
+            'emergencia_contacto',
+            'emergencia_telefono',
+            'forma_pago',
+            'numero_cuenta',
+            'observaciones:ntext',
         ],
     ]) ?>
 
 </div>
+

@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\modules\nomina\models\Colaboradores;
+use yii\db\Expression;
 
 /**
  * ColaboradoresSearch represents the model behind the search form about `backend\modules\nomina\models\Colaboradores`.
@@ -19,7 +20,7 @@ class ColaboradoresSearch extends Colaboradores
     {
         return [
             [['id', 'puesto_id', 'temporalidad_pago_id'], 'integer'],
-            [['clave', 'nombre', 'apaterno', 'amaterno', 'rfc', 'curp', 'nss', 'fingreso', 'fbaja', 'activo'], 'safe'],
+            [['bcolaborador_nombre', 'clave', 'nombre', 'apaterno', 'amaterno', 'rfc', 'curp', 'nss', 'fingreso', 'fbaja', 'activo'], 'safe'],
         ];
     }
 
@@ -41,10 +42,24 @@ class ColaboradoresSearch extends Colaboradores
      */
     public function search($params)
     {
+        $colaboradorNombre = new Expression('CONCAT_WS(" ", nombre, apaterno, amaterno)');
         $query = Colaboradores::find();
+
+        $query->select([
+            'colaboradores.*',
+            'bcolaborador_nombre' => $colaboradorNombre,
+        ]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'attributes' => [
+                    'bcolaborador_nombre' => [
+                      'asc' => [(string)$colaboradorNombre => SORT_ASC],
+                      'desc' => [(string)$colaboradorNombre => SORT_DESC],
+                    ]
+                ]
+            ]
         ]);
 
         $this->load($params);
@@ -70,7 +85,9 @@ class ColaboradoresSearch extends Colaboradores
             ->andFilterWhere(['like', 'rfc', $this->rfc])
             ->andFilterWhere(['like', 'curp', $this->curp])
             ->andFilterWhere(['like', 'nss', $this->nss])
-            ->andFilterWhere(['like', 'activo', $this->activo]);
+            ->andFilterWhere(['like', 'activo', $this->activo])
+            ->andFilterWhere(['like', $colaboradorNombre, $this->bcolaborador_nombre])
+         ;
 
         return $dataProvider;
     }

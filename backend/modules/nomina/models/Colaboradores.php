@@ -19,9 +19,18 @@ use common\models\User;
  * @property string $fbaja
  * @property int $activo
  * @property int $temporalidad_pago_id
+ * @property string $telefono
+ * @property string $emergencia_contacto
+ * @property string $emergencia_telefono
+ * @property string $forma_pago
+ * @property string $numero_cuenta
+ * @property string $observaciones
  *
  * @property TemporalidadPago $temporalidadPago
  * @property Catpuestos $puesto
+ * @property MovimientoDiario[] $movimientoDiarios
+ * @property MovimientoDiario[] $movimientoDiarios0
+ * @property NominaGlosa[] $nominaGlosas
  * @property Tareas[] $tareas
  * @property Tareas[] $tareas0
  * @property Tareas[] $tareas1
@@ -29,6 +38,7 @@ use common\models\User;
  */
 class Colaboradores extends \yii\db\ActiveRecord
 {
+    public $bcolaborador_nombre;
     /**
      * @inheritdoc
      */
@@ -43,21 +53,24 @@ class Colaboradores extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['clave', 'nombre', 'apaterno', 'amaterno'], 'required'],
+            [['clave', 'nombre', 'apaterno', 'amaterno', 'puesto_id', 'activo', 'temporalidad_pago_id'], 'required'],
             [['puesto_id', 'activo', 'temporalidad_pago_id'], 'integer'],
             [['fingreso', 'fbaja'], 'safe'],
-            [['clave'], 'string', 'max' => 10],
-            [['nombre'], 'string', 'max' => 100],
+            [['observaciones'], 'string'],
+            [['clave', 'telefono', 'emergencia_telefono', 'forma_pago'], 'string', 'max' => 10],
+            [['nombre', 'emergencia_contacto'], 'string', 'max' => 100],
             [['apaterno', 'amaterno'], 'string', 'max' => 32],
             [['rfc'], 'string', 'max' => 13],
-            [['curp'], 'string', 'max' => 18],
+            [['curp', 'numero_cuenta'], 'string', 'max' => 18],
             [['nss'], 'string', 'max' => 11],
             [['clave'], 'unique'],
-            [['rfc'], 'unique'],
             [['temporalidad_pago_id'], 'exist', 'skipOnError' => true, 'targetClass' => TemporalidadPago::className(), 'targetAttribute' => ['temporalidad_pago_id' => 'id']],
             [['puesto_id'], 'exist', 'skipOnError' => true, 'targetClass' => Catpuestos::className(), 'targetAttribute' => ['puesto_id' => 'id']],
+
             [['nombre', 'apaterno', 'amaterno', 'rfc', 'curp', 'nss'], 'filter', 'filter' => 'strtoupper'],
+
         ];
+
     }
 
 
@@ -81,6 +94,13 @@ class Colaboradores extends \yii\db\ActiveRecord
             'fbaja' => 'Fecha de Baja',
             'activo' => 'Activo',
             'temporalidad_pago_id' => 'Temporalidad de Pago',
+            'bcolaborador_nombre' => 'Colaborador',
+            'telefono' => 'Telefono',
+            'emergencia_contacto' => 'Emergencia Contacto',
+            'emergencia_telefono' => 'Emergencia Telefono',
+            'forma_pago' => 'Forma Pago',
+            'numero_cuenta' => 'Numero Cuenta',
+            'observaciones' => 'Observaciones',
         ];
     }
 
@@ -139,6 +159,30 @@ class Colaboradores extends \yii\db\ActiveRecord
     public function getPuesto()
     {
         return $this->hasOne(Catpuestos::className(), ['id' => 'puesto_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMovimientoDiarios()
+    {
+        return $this->hasMany(MovimientoDiario::className(), ['colaborador_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMovimientoDiarios0()
+    {
+        return $this->hasMany(MovimientoDiario::className(), ['colaborador_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNominaGlosas()
+    {
+        return $this->hasMany(NominaGlosa::className(), ['colaborador_id' => 'id']);
     }
 
     /**
