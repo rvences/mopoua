@@ -39,7 +39,8 @@ class MiNominaController extends Controller
     {
         $model = new Nomina();
 
-        $colaborador = 37;
+        $colaborador = Yii::$app->user->identity->colaborador_id;
+
         if ($model->load(Yii::$app->request->post())) {
             $nominaGlosa = NominaGlosa::find()
                 ->where(['fechas_pago_id' => $model->fecha_pago_id])

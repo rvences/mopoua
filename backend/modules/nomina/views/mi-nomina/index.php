@@ -24,8 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php $form = ActiveForm::begin(); ?>
 
         <?php
-        $subQuery = \backend\modules\nomina\models\Nomina::find()->select('fecha_pago_id as id')->where(['colaborador_id' => 12])->all();
-        $dato = \yii\helpers\ArrayHelper::map(\backend\modules\nomina\models\FechasPago::find()->select('id, de, hasta')->where(['in', 'id', $subQuery])->asArray()->orderBy('de')->all(), 'id',
+        $subQuery = \backend\modules\nomina\models\Nomina::find()->select('fecha_pago_id as id')->where(['colaborador_id' => Yii::$app->user->identity->colaborador_id])->all();
+        $dato = \yii\helpers\ArrayHelper::map(\backend\modules\nomina\models\FechasPago::find()->select('id, de, hasta')->where(['in', 'id', $subQuery])->asArray()->orderBy('de DESC')->all(), 'id',
             function($model, $defaultValue) {
                 return $model['de'].' al '.$model['hasta'];
             }
@@ -40,11 +40,11 @@ $this->params['breadcrumbs'][] = $this->title;
         if (isset($nomina) ) { ?>
 
             <div class="row">
-                <div class="col-md-12"><h2><?= $nomina['colaborador']; ?></h2></div>
+                <div class="col-sm-10"><h2><?= $nomina['colaborador']; ?></h2></div>
             </div>
             <div class="row">
-                <div class="col-md-6"><h2><?= $nomina['puesto']; ?></h2></div>
-                <div class="col-md-6"><h2>Salario Neto: $<?= $nomina['salario_neto'] . ' ( ' . $nomina['forma_pago'] . ') '; ?></h2></div>
+                <div class="col-sm-5"><h2><?= $nomina['puesto']; ?></h2></div>
+                <div class="col-sm-5"><h2>Salario Neto: $<?= $nomina['salario_neto'] . ' ( ' . $nomina['forma_pago'] . ') '; ?></h2></div>
             </div>
         <?php }
         if (isset ($nominaGlosa)) { ?>
@@ -56,12 +56,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="row">
                     <?php
                     if ($valor['percepcion']> 0 ) { ?>
-                    <div class="col-md-1 bg-success"><h3>+</h3></div>
+                    <div class="col-sm-1 bg-success"><p>+</p></div>
                     <?php } else { ?>
-                    <div class="col-md-1 bg-danger"><h3>-</h3></div>
+                    <div class="col-sm-1 bg-danger"><p>-</p></div>
                     <?php } ?>
-                    <div class="col-md-6 "><h3><?=$valor['concepto']; ?></h3></div>
-                    <div class="col-md-4 "><h3><?=$valor['percepcion'] + $valor['deduccion'] + $valor['pk'] + $valor['creditos']; ?></h3></div>
+                    <div class="col-xs-6 "><p><?=$valor['concepto']; ?></p></div>
+                    <div class="col-xs-4 "><p><?=$valor['percepcion'] + $valor['deduccion'] + $valor['pk'] + $valor['creditos']; ?></p></div>
                 </div>
 
             <?php
