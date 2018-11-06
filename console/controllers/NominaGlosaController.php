@@ -30,13 +30,12 @@ class NominaGlosaController extends Controller {
             foreach ( $colaboradores as $key => $colaborador) {
                 self::setNominaxPuesto($procesando['id'], $colaborador, $procesando['temporalidadPago']['multiplicador'], $hoy);
                 self::setMovimientoxDia($procesando['id'], $colaborador, $hoy);
-                self::setNomina($procesando['id'], $colaborador);
-
+                self::setNomina($procesando['id'], $colaborador, $hoy);
             }
         }
     }
 
-    private static function setNomina($nominaId, $colaborador) {
+    private static function setNomina($nominaId, $colaborador, $hoy) {
         $nominaGlosa = NominaGlosa::find()
             ->where(['=', 'colaborador_id' ,$colaborador['id']])
             ->andWhere(['<>','verificador', 'DUP'])
@@ -51,12 +50,16 @@ class NominaGlosaController extends Controller {
 
             echo  "\n " .$salario . "PE " . $glosa['percepcion'] . ' DE ' . $glosa['deduccion'] . 'PK ' . $glosa['pk'] . ' CR ' . $glosa['creditos'];
         }
+
+
         $nominaUsuario = New Nomina();
         $nominaUsuario->fecha_pago_id = $nominaId;
         $nominaUsuario->salario_neto = (float)$salario;
         $nominaUsuario->colaborador_id = $colaborador['id'];
         $nominaUsuario->colaborador = $colaborador['nombre'] . ' ' . $colaborador['apaterno'] . ' ' . $colaborador['amaterno'];
         $nominaUsuario->puesto_id = $colaborador['puesto_id'];
+        $nominaUsuario->puesto = $colaborador['puesto']['puesto'];
+        $nominaUsuario->created_at = $hoy;
         $nominaUsuario->forma_pago = $colaborador['forma_pago'];
         if ($colaborador['forma_pago'] == 'TARJETA') {
             $nominaUsuario->numero_cuenta = $colaborador['numero_cuenta'];
@@ -173,7 +176,9 @@ class NominaGlosaController extends Controller {
         // Seleccionando la nomina a procesar
         // $temp = Colaboradores::find()->select(['id', 'puesto_id', 'temporalidad_pago_id', 'nombre', 'apaterno', 'amaterno', 'forma_pago', 'numero_cuenta'])->where(['activo' => 1, 'temporalidad_pago_id' => $temporalidad])->asArray()->createCommand();
         //        echo $temp->sql;
-        return Colaboradores::find()->select(['id', 'puesto_id', 'temporalidad_pago_id', 'nombre', 'apaterno', 'amaterno', 'forma_pago', 'numero_cuenta'])->where([
+        return Colaboradores::find()->select(['colaboradores.id', 'puesto_id', 'puesto', 'temporalidad_pago_id', 'nombre', 'apaterno', 'amaterno', 'forma_pago', 'numero_cuenta'])
+            ->joinWith('puesto')
+            ->where([
             'activo' => 1,
             'temporalidad_pago_id' => $temporalidad
         ])->asArray()->all();

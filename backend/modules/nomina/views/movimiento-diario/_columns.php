@@ -49,18 +49,31 @@ return [
         }
     ],
 
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'movimiento_nomina_info',
-    ],
+    //[
+    //    'class'=>'\kartik\grid\DataColumn',
+    //    'attribute'=>'movimiento_nomina_info',
+    //],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'monto',
     ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'aplicado_en_nomina',
-    // ],
+
+    [
+        'filterType' => \kartik\grid\GridView::FILTER_SELECT2,
+
+        'filter' => array(1 => 'Aplicado', 0 => 'Pendiente'),
+        'filterInputOptions' => ['placeholder' => 'Estado'],
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'aplicado_en_nomina',
+        'value' => function ($model) {
+            if ($model->aplicado_en_nomina == 1) {
+                return 'Aplicado';
+            } else { return 'Pendiente'; }
+        }
+
+    ],
+
+
     // [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'nomina_glosa_id',

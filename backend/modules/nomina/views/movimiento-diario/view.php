@@ -10,16 +10,32 @@ use yii\widgets\DetailView;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'colaborador_id',
-            'movimiento_fecha',
-            'movimiento_nomina_id',
+            //'id',
+            [
+                'attribute'=>'colaborador_id',
+                'value' => function ($model) {
+                    return $model->colaborador->nombre . ' ' . $model->colaborador->apaterno . ' ' . $model->colaborador->amaterno;
+                }
+            ],
+            'movimiento_fecha:date',
+            [
+                'attribute'=>'movimiento_nomina_id',
+                'value' => function ($model) {
+                    return $model->movimientoNomina->movimiento;
+                }
+            ],
             'movimiento_nomina_info',
             'monto',
-            'aplicado_en_nomina',
-            'nomina_glosa_id',
-            'created_at',
-            'created_by',
+            [
+                'attribute'=>'aplicado_en_nomina',
+                'value' => function ($model) {
+                    if ($model->aplicado_en_nomina == 1) { return 'Aplicado'; } else { return 'Pendiente'; }
+                }
+            ],
+            //'nomina_glosa_id',
+            'created_at:date',
+
+            //'created_by',
         ],
     ]) ?>
 

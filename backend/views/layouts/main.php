@@ -43,6 +43,7 @@ AppAsset::register($this);
         $menuItems = [
             ['label' => 'Tareas', 'url'=> ['/productividad/tareas/index']],
 
+            ['label' => 'Mi Nomina', 'url'=> ['/nomina/mi-nomina']],
 
 
 

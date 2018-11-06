@@ -5,12 +5,12 @@ namespace backend\modules\nomina\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\modules\nomina\models\FechasPago;
+use backend\modules\nomina\models\Nomina;
 
 /**
- * FechasPagoSearch represents the model behind the search form of `backend\modules\nomina\models\FechasPago`.
+ * NominaSearch represents the model behind the search form of `backend\modules\nomina\models\Nomina`.
  */
-class FechasPagoSearch extends FechasPago
+class NominaSearch extends Nomina
 {
     /**
      * {@inheritdoc}
@@ -18,8 +18,9 @@ class FechasPagoSearch extends FechasPago
     public function rules()
     {
         return [
-            [['id', 'total_dias', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
-            [['de', 'hasta', 'fecha_pago'], 'safe'],
+            [['id', 'fecha_pago_id', 'puesto_id', 'created_by', 'created_at'], 'integer'],
+            [['salario_neto', 'colaborador_id'], 'number'],
+            [['colaborador', 'puesto', 'forma_pago', 'numero_cuenta'], 'safe'],
         ];
     }
 
@@ -41,7 +42,7 @@ class FechasPagoSearch extends FechasPago
      */
     public function search($params)
     {
-        $query = FechasPago::find();
+        $query = Nomina::find();
 
         // add conditions that should always apply here
 
@@ -60,15 +61,18 @@ class FechasPagoSearch extends FechasPago
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'de' => $this->de,
-            'hasta' => $this->hasta,
-            'total_dias' => $this->total_dias,
-            'fecha_pago' => $this->fecha_pago,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'fecha_pago_id' => $this->fecha_pago_id,
+            'salario_neto' => $this->salario_neto,
+            'colaborador_id' => $this->colaborador_id,
+            'puesto_id' => $this->puesto_id,
             'created_by' => $this->created_by,
-            'updated_by' => $this->updated_by,
+            'created_at' => $this->created_at,
         ]);
+
+        $query->andFilterWhere(['like', 'colaborador', $this->colaborador])
+            ->andFilterWhere(['like', 'puesto', $this->puesto])
+            ->andFilterWhere(['like', 'forma_pago', $this->forma_pago])
+            ->andFilterWhere(['like', 'numero_cuenta', $this->numero_cuenta]);
 
         return $dataProvider;
     }

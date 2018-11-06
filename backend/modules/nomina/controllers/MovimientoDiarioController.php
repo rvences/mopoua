@@ -39,6 +39,8 @@ class MovimientoDiarioController extends Controller
     public function actionIndex()
     {    
         $searchModel = new MovimientoDiarioSearch();
+        // Haciendo el filtro de los colaboradores activos
+        $searchModel->aplicado_en_nomina = 0;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
