@@ -111,12 +111,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= $form->field($model, 'notas',['showLabels'=>false])->textarea(['placeholder'=>'Otra información necesaria', 'readonly' =>true]); ?>
         </div>
 
-        <div class="col-sm-3">
-            <?php $datos = ['0'=> 'No paga cajero', '1'=>'Paga Cajero'];?>
-            <?= $form->field($model, 'paga_cajero')->dropDownList($datos, ['disabled'=>true]); ?>
-        </div>
-
-
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -50,6 +50,8 @@ class ColaboradoresSearch extends Colaboradores
             'bcolaborador_nombre' => $colaboradorNombre,
         ]);
 
+        $query->orderBy('bcolaborador_nombre ASC');
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => [
