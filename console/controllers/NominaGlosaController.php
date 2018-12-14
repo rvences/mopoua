@@ -46,7 +46,7 @@ class NominaGlosaController extends Controller {
         $salario = (float)0;
         echo "\n " . $colaborador['nombre'] ;
         foreach ($nominaGlosa as $key => $glosa) {
-            $salario += (float)$glosa['percepcion'] - (float)$glosa['deduccion'] - (float)$glosa['pk'] - (float)$glosa['creditos'];
+            $salario += (float)$glosa['percepcion'] - (float)$glosa['deduccion'] + (float)$glosa['pk'] - (float)$glosa['creditos'];
 
             echo  "\n " .$salario . "PE " . $glosa['percepcion'] . ' DE ' . $glosa['deduccion'] . 'PK ' . $glosa['pk'] . ' CR ' . $glosa['creditos'];
         }
@@ -76,6 +76,7 @@ class NominaGlosaController extends Controller {
      * @param $hoy - Fecha en que se realice el registro de la nomina por puesto
      */
     private static function setMovimientoxDia($nominaId, $colaborador, $hoy) {
+
         $diarios = MovimientoDiario::find()
             ->joinWith('movimientoNomina')
             ->where([
@@ -95,12 +96,17 @@ class NominaGlosaController extends Controller {
             $nominaGlosaColaborador->pk = 0;
             $nominaGlosaColaborador->creditos = 0;
             $nominaGlosaColaborador->percepcion = 0;
+
+
+            print_r($diario);
+            echo "<br>";
+
             if ($diario['movimientoNomina']['clave'] == 'DE') {
                 $nominaGlosaColaborador->tipo_movimiento  =  'DEDUCCION';
                 $nominaGlosaColaborador->deduccion = (float)$diario['monto'];
             }
             if ($diario['movimientoNomina']['clave'] == 'PK') {
-                $nominaGlosaColaborador->tipo_movimiento  =  'ESTABLECIMIENTO';
+                $nominaGlosaColaborador->tipo_movimiento  =  'LOCAL';
                 $nominaGlosaColaborador->pk = (float)$diario['monto'];
             }
             if ($diario['movimientoNomina']['clave'] == 'CR') {
