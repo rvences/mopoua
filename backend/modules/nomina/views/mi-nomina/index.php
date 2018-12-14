@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
             foreach ( $nominaGlosa as $key => $valor) { ?>
                 <div class="row">
                     <?php
-                    if ($valor['percepcion']> 0 ) { ?>
+                    if ($valor['percepcion']> 0 || $valor['pk']> 0) { ?>
                     <div class="col-sm-1 bg-success"><p>+</p></div>
                     <?php } else { ?>
                     <div class="col-sm-1 bg-danger"><p>-</p></div>
