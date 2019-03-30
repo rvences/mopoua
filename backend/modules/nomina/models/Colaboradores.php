@@ -121,6 +121,7 @@ class Colaboradores extends \yii\db\ActiveRecord
 
             }
             */
+		$this->activo = 1;
             $this->nombre = trim(strtoupper($this->nombre));
             $this->apaterno = trim(strtoupper($this->apaterno));
             $this->amaterno = trim(strtoupper($this->amaterno));

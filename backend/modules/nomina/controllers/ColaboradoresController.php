@@ -87,7 +87,9 @@ class ColaboradoresController extends Controller
     {
         $request = Yii::$app->request;
         $model = new Colaboradores();  
-
+	
+	// Activo al crear
+	$model->activo = 1;
         if($request->isAjax){
             /*
             *   Process for ajax request

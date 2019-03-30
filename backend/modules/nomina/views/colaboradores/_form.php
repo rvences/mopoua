@@ -10,7 +10,7 @@ use kartik\widgets\ActiveForm;
 <div class="colaboradores-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
+    <div class="bg-error"><?php echo $form->errorSummary($model); ?></div>
     <fieldset>
         <legend class="bg-warning">Datos Personales</legend>
 
