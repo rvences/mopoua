@@ -28,7 +28,7 @@ use kartik\widgets\ActiveForm;
     <?= $form->field($model, 'colaborador_id')->dropDownList($dato, ['prompt' =>'[Seleccionar]']); ?>
 
     <?= $form->field($model, 'movimiento_fecha')->widget(\kartik\datecontrol\DateControl::className(), [
-            'type' => \kartik\datecontrol\DateControl::FORMAT_DATE,
+            //'type' => \kartik\datecontrol\DateControl::FORMAT_DATE,
     ]); ?>
 
     <?php

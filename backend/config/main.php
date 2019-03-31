@@ -44,9 +44,14 @@ return [
             // format settings for displaying each date attribute (ICU format example)
             'displaySettings' => [
                 // \kartik\datecontrol\Module::FORMAT_DATE => 'dd.MM.yyyy',
+                \kartik\datecontrol\Module::FORMAT_DATE => 'php:d-M-Y', // saves as unix timestamp
+                \kartik\datecontrol\Module::FORMAT_TIME => 'php:H:i:s',
+                \kartik\datecontrol\Module::FORMAT_DATETIME => 'php:Y-m-d H:i:s',
+                /*
                 \kartik\datecontrol\Module::FORMAT_DATE => 'php:D j M Y',
                 \kartik\datecontrol\Module::FORMAT_TIME => 'HH:mm:ss a',
                 \kartik\datecontrol\Module::FORMAT_DATETIME => 'dd-MM-yyyy HH:mm:ss a',
+                */
             ],
             // format settings for saving each date attribute (PHP format example)
             'saveSettings' => [

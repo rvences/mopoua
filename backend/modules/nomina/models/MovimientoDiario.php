@@ -47,6 +47,8 @@ class MovimientoDiario extends \yii\db\ActiveRecord
             [['colaborador_id', 'movimiento_nomina_id', 'aplicado_en_nomina', 'nomina_glosa_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['movimiento_fecha'], 'safe'],
             [['monto'], 'number'],
+
+            [['colaborador_id', 'movimiento_fecha','movimiento_nomina_id', 'monto'], 'required'],
             [['movimiento_nomina_info'], 'string', 'max' => 100],
             [['colaborador_id'], 'exist', 'skipOnError' => true, 'targetClass' => Colaboradores::className(), 'targetAttribute' => ['colaborador_id' => 'id']],
             [['colaborador_id'], 'exist', 'skipOnError' => true, 'targetClass' => Colaboradores::className(), 'targetAttribute' => ['colaborador_id' => 'id']],
