@@ -24,12 +24,12 @@ class NominaGlosaController extends Controller {
         $procesando = self::procesaNomina(2);
         if ( $procesando) {
             self::setNominaDuplicados($procesando['id']);
-            $colaboradores = self::getColaboradores($procesando['temporalidad_pago_id']);
+            $colaboradores = self::getColaboradores($procesando['temporalidad_pago_id'], $procesando['hasta']);
 
 
             foreach ( $colaboradores as $key => $colaborador) {
-                self::setNominaxPuesto($procesando['id'], $colaborador, $procesando['temporalidadPago']['multiplicador'], $hoy);
-                self::setMovimientoxDia($procesando['id'], $colaborador, $hoy);
+                self::setNominaxPuesto($procesando['id'], $colaborador, $procesando['temporalidadPago']['multiplicador'], $hoy, $procesando['hasta']);
+                self::setMovimientoxDia($procesando['id'], $colaborador, $hoy, $procesando['hasta']);
                 self::setNomina($procesando['id'], $colaborador, $hoy);
             }
         }
@@ -75,14 +75,16 @@ class NominaGlosaController extends Controller {
      * @param $colaborador - Array con la informacion del colaborador para obtener la nomina de acuerdo a su puesto
      * @param $hoy - Fecha en que se realice el registro de la nomina por puesto
      */
-    private static function setMovimientoxDia($nominaId, $colaborador, $hoy) {
+    private static function setMovimientoxDia($nominaId, $colaborador, $hoy, $hasta) {
 
         $diarios = MovimientoDiario::find()
             ->joinWith('movimientoNomina')
             ->where([
                 'colaborador_id' => $colaborador['id'],
-                'aplicado_en_nomina' => 0
-            ])->asArray()->all();
+                'aplicado_en_nomina' => 0,
+            ])
+	    ->andWhere(['<=', 'movimiento_fecha', $hasta])
+	    ->asArray()->all();
 
         foreach ($diarios as $key3 => $diario) {
             $nominaGlosaColaborador = new NominaGlosa();
@@ -176,8 +178,9 @@ class NominaGlosaController extends Controller {
     /**
      * Obtiene el listado de los colaboradores que coinciden con la temporalidad de pago ( Semana, Quincena, ... )
      * @param $temporalidad
+     * @param $fingreso Fecha en la que ingreso a laborar
      */
-    private static function getColaboradores($temporalidad) {
+    private static function getColaboradores($temporalidad, $fingreso) {
 
         // Seleccionando la nomina a procesar
         // $temp = Colaboradores::find()->select(['id', 'puesto_id', 'temporalidad_pago_id', 'nombre', 'apaterno', 'amaterno', 'forma_pago', 'numero_cuenta'])->where(['activo' => 1, 'temporalidad_pago_id' => $temporalidad])->asArray()->createCommand();
@@ -187,7 +190,9 @@ class NominaGlosaController extends Controller {
             ->where([
             'activo' => 1,
             'temporalidad_pago_id' => $temporalidad
-        ])->asArray()->all();
+        ])
+	->andWhere(['<','fingreso' , $fingreso])
+	->asArray()->all();
     }
 
     /**
@@ -218,7 +223,7 @@ class NominaGlosaController extends Controller {
         }
     }
 
-
+/*
     public function actionIndex_ori() {
 
         // Fecha en que se inicia el proceso
@@ -436,18 +441,13 @@ class NominaGlosaController extends Controller {
 
         //  select c.nombre, c.apaterno, p.puesto, n.tipo_movimiento, n.percepcion, n.deduccion, n.creditos, n.concepto, n.pk  from nomina_glosa as n join colaboradores as c on (n.colaborador_id = c.id) join catpuestos as p on (c.puesto_id = p.id);
 
-        /*
-
-        select c.nombre, c.apaterno, p.puesto, n.tipo_movimiento, n.percepcion, n.deduccion, n.creditos, n.concepto, n.pk  from nomina_glosa as n join colaboradores as c on (n.colaborador_id = c.id) join catpuestos as p on (c.puesto_id = p.id)
-        INTO OUTFILE '/mnt/c/Projects/mopoua/mopopua.csv'
-FIELDS TERMINATED BY ','
-ENCLOSED BY '"'
-LINES TERMINATED BY '\n';
-         */
+	// select c.nombre, c.apaterno, p.puesto, n.tipo_movimiento, n.percepcion, n.deduccion, n.creditos, n.concepto, n.pk  from nomina_glosa as n join colaboradores as c on (n.colaborador_id = c.id) join catpuestos as p on (c.puesto_id = p.id)
+        //        INTO OUTFILE '/mnt/c/Projects/mopoua/mopopua.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+        //
 
         echo "Nomina Desglosada";
     }
-
+*/
     public function actionMail($to) {
         echo "Sending mail to " . $to;
     }
